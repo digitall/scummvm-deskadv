@@ -27,6 +27,7 @@
 #define DESKADV_H
 
 #include "common/random.h"
+#include "graphics/surface.h"
 
 #include "engines/engine.h"
 
@@ -74,6 +75,8 @@ private:
 	DeskadvConsole *_console;
 
 	Common::RandomSource *_rnd;
+
+	Graphics::Surface *_gfx;
 };
 
 } // End of namespace Deskadv

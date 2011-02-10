@@ -30,7 +30,12 @@
 #include "common/EventRecorder.h"
 #include "common/file.h"
 #include "common/fs.h"
- 
+#include "common/keyboard.h"
+
+#include "graphics/cursorman.h"
+#include "graphics/surface.h"
+#include "graphics/pixelformat.h"
+
 #include "engines/util.h"
 
 #include "deskadv/console.h"
@@ -65,19 +70,76 @@ DeskadvEngine::~DeskadvEngine() {
 
 	delete _rnd;
 	delete _console;
+
+	delete _gfx;
 }
 
 Common::Error DeskadvEngine::run() {
-	//Common::Event event;
+	Common::Event event;
+
+	_gfx = new Graphics::Surface();
+	_gfx->create(320, 200, 1);
+
+	uint8 palette[4] = { 127, 127, 127, 255 }; // R-G-B-A per entry
 
 	initGraphics(320, 200, false);
+	_system->getPaletteManager()->setPalette(palette, 0, sizeof(palette)/4);
+	_gfx->fillRect(Common::Rect(0, 0, 320, 200), 0);
+	_system->copyRectToScreen((byte *)_gfx->pixels, _gfx->pitch, 0, 0, 320, 200);
+	_system->updateScreen();
+
+
+	CursorMan.showMouse(true);
 
 	_console = new DeskadvConsole(this);
 
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");
+
+		while (_eventMan->pollEvent(event)) {
+			switch (event.type) {
+			case Common::EVENT_LBUTTONDOWN:
+				break;
+
+			case Common::EVENT_RBUTTONDOWN:
+				break;
+
+			case Common::EVENT_MOUSEMOVE:
+				break;
+
+			case Common::EVENT_KEYDOWN:
+				switch (event.kbd.keycode) {
+				case Common::KEYCODE_d:
+					if (event.kbd.hasFlags(Common::KBD_CTRL)) {
+						// Start the debugger
+						getDebugger()->attach();
+						getDebugger()->onFrame();
+					}
+					break;
+
+				case Common::KEYCODE_ESCAPE:
+					quitGame();
+					break;
+
+				default:
+					break;
+				}
+				break;
+
+			case Common::EVENT_QUIT:
+			case Common::EVENT_RTL:
+				quitGame();
+				break;
+
+			default:
+				break;
+			}
+		}
+
 		_system->delayMillis(50);
 	}
+
+	_gfx->free();
 
 	return Common::kNoError;
 }
