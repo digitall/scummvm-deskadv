@@ -27,11 +27,13 @@
 #define DESKADV_H
 
 #include "common/random.h"
-#include "graphics/surface.h"
+#include "common/system.h"
 
 #include "engines/engine.h"
+#include "engines/util.h"
 
 #include "deskadv/console.h"
+#include "deskadv/graphics.h"
 
 namespace Deskadv {
 
@@ -64,19 +66,18 @@ public:
 	uint32 getFeatures() const;
 	Common::Language getLanguage() const;
 	Common::Platform getPlatform() const;
-	uint16 getVersion() const;
 	const Common::String& getTargetName() const { return _targetName; }
 
 	const DeskadvGameDescription *_gameDescription;
 
 	GUI::Debugger *getDebugger() { return _console; }
 
+	Gfx *_gfx;
+
 private:
 	DeskadvConsole *_console;
 
 	Common::RandomSource *_rnd;
-
-	Graphics::Surface *_gfx;
 };
 
 } // End of namespace Deskadv

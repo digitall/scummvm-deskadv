@@ -23,24 +23,25 @@
  *
  */
 
-#ifndef DESKADV_CONSOLE_H
-#define DESKADV_CONSOLE_H
+#include "graphics/surface.h"
 
-#include "gui/debugger.h"
+#ifndef DESKADV_GRAPHICS_H
+#define DESKADV_GRAPHICS_H
 
 namespace Deskadv {
 
-class DeskadvEngine;
-
-class DeskadvConsole : public GUI::Debugger {
+class Gfx {
 public:
-	DeskadvConsole(DeskadvEngine *vm);
-	virtual ~DeskadvConsole(void);
+	Gfx(DeskadvEngine *vm);
+	virtual ~Gfx(void);
+
+	void updateScreen(void);
+	void viewPalette(void);
 
 private:
 	DeskadvEngine *_vm;
 
-	bool Cmd_ViewPalette(int argc, const char **argv);
+	Graphics::Surface *_screen;
 };
 
 } // End of namespace Deskadv

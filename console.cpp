@@ -29,9 +29,15 @@
 namespace Deskadv {
 
 DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
+	DCmd_Register("viewPalette", WRAP_METHOD(DeskadvConsole, Cmd_ViewPalette));
 }
 
 DeskadvConsole::~DeskadvConsole() {
+}
+
+bool DeskadvConsole::Cmd_ViewPalette(int argc, const char **argv) {
+	_vm->_gfx->viewPalette();
+	return false;
 }
 
 } // End of namespace Deskadv

@@ -55,10 +55,6 @@ Common::Platform DeskadvEngine::getPlatform() const {
 	return _gameDescription->desc.platform;
 }
 
-uint16 DeskadvEngine::getVersion() const {
-	return _gameDescription->version;
-}
-
 }
 
 static const PlainGameDescriptor deskadvGames[] = {
@@ -70,7 +66,6 @@ static const PlainGameDescriptor deskadvGames[] = {
 namespace Deskadv {
 
 using Common::GUIO_NONE;
-using Common::GUIO_NOSPEECH;
 
 static const DeskadvGameDescription gameDescriptions[] = {
 
@@ -87,7 +82,6 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			ADGF_NO_FLAGS,
 			Common::GUIO_NONE
 		},
-		0,
 		0,
 		0,
 		0
@@ -108,7 +102,6 @@ static const DeskadvGameDescription gameDescriptions[] = {
 		},
 		0,
 		0,
-		0,
 		0
 	},
 
@@ -125,7 +118,6 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			ADGF_NO_FLAGS,
 			Common::GUIO_NONE
 		},
-		0,
 		0,
 		0,
 		0
@@ -146,11 +138,10 @@ static const DeskadvGameDescription gameDescriptions[] = {
 		},
 		0,
 		0,
-		0,
 		0
 	},
 
-	{ AD_TABLE_END_MARKER, 0, 0, 0, 0 }
+	{ AD_TABLE_END_MARKER, 0, 0, 0 }
 };
 
 static const ADParams detectionParams = {

@@ -23,26 +23,15 @@
  *
  */
 
-#ifndef DESKADV_CONSOLE_H
-#define DESKADV_CONSOLE_H
-
-#include "gui/debugger.h"
+#include "deskadv/deskadv.h"
+#include "deskadv/saveload.h"
 
 namespace Deskadv {
 
-class DeskadvEngine;
+Saveload::Saveload(DeskadvEngine *vm) : _vm(vm) {
+}
 
-class DeskadvConsole : public GUI::Debugger {
-public:
-	DeskadvConsole(DeskadvEngine *vm);
-	virtual ~DeskadvConsole(void);
-
-private:
-	DeskadvEngine *_vm;
-
-	bool Cmd_ViewPalette(int argc, const char **argv);
-};
+Saveload::~Saveload() {
+}
 
 } // End of namespace Deskadv
-
-#endif

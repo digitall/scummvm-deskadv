@@ -23,26 +23,22 @@
  *
  */
 
-#ifndef DESKADV_CONSOLE_H
-#define DESKADV_CONSOLE_H
+#include "common/file.h"
 
-#include "gui/debugger.h"
+#include "deskadv/deskadv.h"
+#include "deskadv/resource.h"
 
 namespace Deskadv {
 
-class DeskadvEngine;
+ResourceFile::ResourceFile(Common::File *file) {
+}
 
-class DeskadvConsole : public GUI::Debugger {
-public:
-	DeskadvConsole(DeskadvEngine *vm);
-	virtual ~DeskadvConsole(void);
+ResourceFile::~ResourceFile() {
+}
 
-private:
-	DeskadvEngine *_vm;
-
-	bool Cmd_ViewPalette(int argc, const char **argv);
-};
+byte *ResourceFile::getTileData(uint32 ref) {
+	// TODO: Fix this...
+	return NULL;
+}
 
 } // End of namespace Deskadv
-
-#endif

@@ -77,21 +77,11 @@ DeskadvEngine::~DeskadvEngine() {
 Common::Error DeskadvEngine::run() {
 	Common::Event event;
 
-	_gfx = new Graphics::Surface();
-	_gfx->create(320, 200, 1);
-
-	uint8 palette[4] = { 127, 127, 127, 255 }; // R-G-B-A per entry
-
-	initGraphics(320, 200, false);
-	_system->getPaletteManager()->setPalette(palette, 0, sizeof(palette)/4);
-	_gfx->fillRect(Common::Rect(0, 0, 320, 200), 0);
-	_system->copyRectToScreen((byte *)_gfx->pixels, _gfx->pitch, 0, 0, 320, 200);
-	_system->updateScreen();
-
-
-	CursorMan.showMouse(true);
-
+	_gfx = new Gfx(this);
 	_console = new DeskadvConsole(this);
+
+	// TODO: Load Mouse Cursors
+	CursorMan.showMouse(true);
 
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");
@@ -138,8 +128,6 @@ Common::Error DeskadvEngine::run() {
 
 		_system->delayMillis(50);
 	}
-
-	_gfx->free();
 
 	return Common::kNoError;
 }
