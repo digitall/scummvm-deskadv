@@ -42,6 +42,11 @@ struct DeskadvGameDescription;
 class DeskadvEngine;
 class DeskadvConsole;
 
+enum GameType {
+	GType_Indy = 1,
+	GType_Yoda = 2
+};
+
 // Engine Debug Flags
 enum {
 	kDebugResource  = (1 << 0),
@@ -62,11 +67,9 @@ public:
 	virtual bool hasFeature(EngineFeature f) const;
 
 	int getGameType() const;
-	uint32 getGameID() const;
+	const char *getGameId() const;
 	uint32 getFeatures() const;
 	Common::Language getLanguage() const;
-	Common::Platform getPlatform() const;
-	const Common::String& getTargetName() const { return _targetName; }
 
 	const DeskadvGameDescription *_gameDescription;
 

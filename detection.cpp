@@ -33,26 +33,23 @@ namespace Deskadv {
 struct DeskadvGameDescription {
 	ADGameDescription desc;
 
-	int gameID;
 	int gameType;
-	uint32 features;
-	uint16 version;
 };
 
-uint32 DeskadvEngine::getGameID() const {
-	return _gameDescription->gameID;
+int DeskadvEngine::getGameType() const {
+	return _gameDescription->gameType;
+}
+
+const char *DeskadvEngine::getGameId() const {
+	return _gameDescription->desc.gameid;
 }
 
 uint32 DeskadvEngine::getFeatures() const {
-	return _gameDescription->features;
+	return _gameDescription->desc.flags;
 }
 
 Common::Language DeskadvEngine::getLanguage() const {
 	return _gameDescription->desc.language;
-}
-
-Common::Platform DeskadvEngine::getPlatform() const {
-	return _gameDescription->desc.platform;
 }
 
 }
@@ -73,7 +70,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 	{
 		{
 			"indydesk",
-			"",
+			0,
 			{{"desktop.daw", 0, "173efd0c8aa63f20752445c07d9afd15", -1},
 			 {"deskadv.exe", 0, "df36d397f90f19f5daed425403cf9538", -1},
 			 AD_LISTEND},
@@ -82,9 +79,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			ADGF_NO_FLAGS,
 			Common::GUIO_NONE
 		},
-		0,
-		0,
-		0
+		GType_Indy
 	},
 
 	// Indiana Jones Desktop Adventures (Demo) - English
@@ -100,16 +95,14 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			ADGF_DEMO,
 			Common::GUIO_NONE
 		},
-		0,
-		0,
-		0
+		GType_Indy
 	},
 
 	// Yoda Stories - English
 	{
 		{
 			"yodadesk",
-			"",
+			0,
 			{{"yodesk.dta", 0, "1d2afd3a6af3ff71c31582757060427d", -1},
 			 {"yodesk.exe", 0, "8c2a17262a9b93e3f8f198dc922e8e67", -1},
 			 AD_LISTEND},
@@ -118,9 +111,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			ADGF_NO_FLAGS,
 			Common::GUIO_NONE
 		},
-		0,
-		0,
-		0
+		GType_Yoda
 	},
 
 	// Yoda Stories (Demo) - English
@@ -136,12 +127,10 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			ADGF_DEMO,
 			Common::GUIO_NONE
 		},
-		0,
-		0,
-		0
+		GType_Yoda
 	},
 
-	{ AD_TABLE_END_MARKER, 0, 0, 0 }
+	{ AD_TABLE_END_MARKER, 0 }
 };
 
 static const ADParams detectionParams = {
@@ -156,7 +145,7 @@ static const ADParams detectionParams = {
 	// Structure for autoupgrading obsolete targets
 	0,
 	// Name of single gameid (optional)
-	"",
+	0,
 	// List of files for file-based fallback detection (optional)
 	0,
 	// Flags
