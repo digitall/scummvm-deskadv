@@ -26,16 +26,26 @@
 #ifndef DESKADV_RESOURCE_H
 #define DESKADV_RESOURCE_H
 
+#include "common/file.h"
+
 namespace Deskadv {
 
-class ResourceFile {
-public:
-	ResourceFile(Common::File *file);
-	virtual ~ResourceFile(void);
+class DeskadvEngine;
 
+class Resource {
+public:
+	Resource(DeskadvEngine *vm, bool isYoda, Common::File *file);
+	virtual ~Resource(void);
+
+	uint32 getTileCount(void) { return _tileCount; }
 	byte *getTileData(uint32 ref);
 
 private:
+	DeskadvEngine *_vm;
+
+	Common::File *_file;
+	uint32 _tileCount;
+	uint32 _tileDataOffset;
 };
 
 } // End of namespace Deskadv

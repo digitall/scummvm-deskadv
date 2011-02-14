@@ -28,12 +28,15 @@
 
 #include "common/random.h"
 #include "common/system.h"
+#include "common/debug.h"
+#include "common/debug-channels.h"
 
 #include "engines/engine.h"
 #include "engines/util.h"
 
 #include "deskadv/console.h"
 #include "deskadv/graphics.h"
+#include "deskadv/resource.h"
 
 namespace Deskadv {
 
@@ -81,6 +84,8 @@ private:
 	DeskadvConsole *_console;
 
 	Common::RandomSource *_rnd;
+
+	Resource *_resource;
 };
 
 } // End of namespace Deskadv

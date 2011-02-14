@@ -25,8 +25,6 @@
 #include "common/scummsys.h"
  
 #include "common/config-manager.h"
-#include "common/debug.h"
-#include "common/debug-channels.h"
 #include "common/EventRecorder.h"
 #include "common/file.h"
 #include "common/fs.h"
@@ -58,6 +56,8 @@ DeskadvEngine::DeskadvEngine(OSystem *syst, const DeskadvGameDescription *gameDe
 	g_eventRec.registerRandomSource(*_rnd, "deskadv");
 
 	_console = 0;
+	_gfx = 0;
+	_resource = 0;
 
 	// TODO: Add Sound Mixer
 	// TODO: Add WAV Player for SFX
@@ -71,6 +71,7 @@ DeskadvEngine::~DeskadvEngine() {
 	delete _rnd;
 	delete _console;
 
+	delete _resource;
 	delete _gfx;
 }
 
@@ -82,6 +83,14 @@ Common::Error DeskadvEngine::run() {
 
 	// TODO: Load Mouse Cursors
 	CursorMan.showMouse(true);
+
+	Common::File f;
+	// TODO: Add support for switching Indy/Yoda Archive format
+	f.open("yodesk.dta");
+	_resource = new Resource(this, true, &f);
+	delete _resource;
+	_resource = 0;
+	f.close();
 
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");
