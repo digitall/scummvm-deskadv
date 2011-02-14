@@ -34,8 +34,10 @@ class DeskadvEngine;
 
 class Resource {
 public:
-	Resource(DeskadvEngine *vm, bool isYoda, Common::File *file);
+	Resource(DeskadvEngine *vm);
 	virtual ~Resource(void);
+
+	bool load(const char *filename, bool isYoda);
 
 	uint32 getTileCount(void) { return _tileCount; }
 	byte *getTileData(uint32 ref);

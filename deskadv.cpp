@@ -81,14 +81,22 @@ Common::Error DeskadvEngine::run() {
 
 	_gfx = new Gfx(this);
 	_console = new DeskadvConsole(this);
+	_resource = new Resource(this);
+
+	switch (getGameType()) {
+	case GType_Indy:
+		_resource->load("desktop.daw", false);
+		break;
+	case GType_Yoda:
+		_resource->load("yodesk.dta", true);
+		break;
+	default:
+		error("Unknown Game Type for Resource File...");
+		break;
+	}
 
 	// TODO: Load Mouse Cursors
 	CursorMan.showMouse(true);
-
-	Common::File f;
-	// TODO: Add support for switching Indy/Yoda Archive format
-	f.open("yodesk.dta");
-	_resource = new Resource(this, true, &f);
 
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");
@@ -135,10 +143,6 @@ Common::Error DeskadvEngine::run() {
 
 		_system->delayMillis(50);
 	}
-
-	delete _resource;
-	_resource = 0;
-	f.close();
 
 	return Common::kNoError;
 }
