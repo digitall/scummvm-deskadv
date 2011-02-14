@@ -30,6 +30,7 @@ namespace Deskadv {
 
 DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("viewPalette", WRAP_METHOD(DeskadvConsole, Cmd_ViewPalette));
+	DCmd_Register("drawTile", WRAP_METHOD(DeskadvConsole, Cmd_DrawTile));
 }
 
 DeskadvConsole::~DeskadvConsole() {
@@ -37,6 +38,20 @@ DeskadvConsole::~DeskadvConsole() {
 
 bool DeskadvConsole::Cmd_ViewPalette(int argc, const char **argv) {
 	_vm->_gfx->viewPalette();
+	return false;
+}
+
+bool DeskadvConsole::Cmd_DrawTile(int argc, const char **argv) {
+	if (argc != 4) {
+		DebugPrintf("Usage: drawTile <ref> <x> <y>\n");
+		return true;
+	}
+
+	uint32 ref = atoi(argv[1]);
+	uint x = atoi(argv[2]);
+	uint y = atoi(argv[3]);
+	_vm->_gfx->drawTile(ref, x, y);
+	_vm->_gfx->updateScreen();
 	return false;
 }
 

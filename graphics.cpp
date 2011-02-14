@@ -63,8 +63,17 @@ Gfx::~Gfx() {
 }
 
 void Gfx::updateScreen(void) {
+	debugC(1, kDebugGraphics, "Gfx::updateScreen()");
 	_vm->_system->copyRectToScreen((byte *)_screen->pixels, _screen->pitch, 0, 0, 320, 200);
 	_vm->_system->updateScreen();
+}
+
+void Gfx::drawTile(uint32 ref, uint x, uint y) {
+	debugC(1, kDebugGraphics, "Gfx::drawTile(ref: %d, x: %d, y: %d)", ref, x, y);
+	byte *tile = _vm->_resource->getTileData(ref);
+	for (uint i = 0; i < 32; i++) {
+		memcpy(_screen->getBasePtr(x, y+i), tile+(i*32), 32);
+	}
 }
 
 void Gfx::viewPalette(void) {

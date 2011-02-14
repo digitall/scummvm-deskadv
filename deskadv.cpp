@@ -47,6 +47,7 @@ DeskadvEngine::DeskadvEngine(OSystem *syst, const DeskadvGameDescription *gameDe
 	DebugMan.addDebugChannel(kDebugScript, "Script", "Script Debug Flag");
 	DebugMan.addDebugChannel(kDebugText, "Text", "Text Debug Flag");
 	DebugMan.addDebugChannel(kDebugCollision, "Collision", "Collision Debug Flag");
+	DebugMan.addDebugChannel(kDebugGraphics, "Graphics", "Graphics Debug Flag");
 
 	const Common::FSNode gameDataDir(ConfMan.get("path"));
 	SearchMan.addSubDirectoryMatching(gameDataDir, "bitmaps");
@@ -88,9 +89,6 @@ Common::Error DeskadvEngine::run() {
 	// TODO: Add support for switching Indy/Yoda Archive format
 	f.open("yodesk.dta");
 	_resource = new Resource(this, true, &f);
-	delete _resource;
-	_resource = 0;
-	f.close();
 
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");
@@ -137,6 +135,10 @@ Common::Error DeskadvEngine::run() {
 
 		_system->delayMillis(50);
 	}
+
+	delete _resource;
+	_resource = 0;
+	f.close();
 
 	return Common::kNoError;
 }

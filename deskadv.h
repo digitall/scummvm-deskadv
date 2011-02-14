@@ -56,7 +56,8 @@ enum {
 	kDebugSaveLoad  = (1 << 1),
 	kDebugScript    = (1 << 2),
 	kDebugText      = (1 << 3),
-	kDebugCollision = (1 << 4)
+	kDebugCollision = (1 << 4),
+	kDebugGraphics  = (1 << 5)
 };
 
 class DeskadvEngine : public Engine {
@@ -79,13 +80,12 @@ public:
 	GUI::Debugger *getDebugger() { return _console; }
 
 	Gfx *_gfx;
+	Resource *_resource;
 
 private:
 	DeskadvConsole *_console;
 
 	Common::RandomSource *_rnd;
-
-	Resource *_resource;
 };
 
 } // End of namespace Deskadv

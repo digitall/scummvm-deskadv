@@ -36,6 +36,9 @@ public:
 	virtual ~Gfx(void);
 
 	void updateScreen(void);
+	void drawTile(uint32 ref, uint x, uint y);
+
+	// Debug Routines
 	void viewPalette(void);
 
 private:
