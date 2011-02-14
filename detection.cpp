@@ -75,7 +75,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			 {"deskadv.exe", 0, "df36d397f90f19f5daed425403cf9538", -1},
 			 AD_LISTEND},
 			Common::EN_ANY,
-			Common::kPlatformPC,
+			Common::kPlatformWindows,
 			ADGF_NO_FLAGS,
 			Common::GUIO_NONE
 		},
@@ -91,7 +91,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			 {"deskadv.exe", 0, "2d561e0cfd8b3d9035af2e612e28eba8", -1},
 			 AD_LISTEND},
 			Common::EN_ANY,
-			Common::kPlatformPC,
+			Common::kPlatformWindows,
 			ADGF_DEMO,
 			Common::GUIO_NONE
 		},
@@ -107,7 +107,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			 {"yodesk.exe", 0, "8c2a17262a9b93e3f8f198dc922e8e67", -1},
 			 AD_LISTEND},
 			Common::EN_ANY,
-			Common::kPlatformPC,
+			Common::kPlatformWindows,
 			ADGF_NO_FLAGS,
 			Common::GUIO_NONE
 		},
@@ -123,7 +123,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			 {"yodademo.exe", 0, "6298347428cb02cf6a6d923ffc46f8ac", -1},
 			 AD_LISTEND},
 			Common::EN_ANY,
-			Common::kPlatformPC,
+			Common::kPlatformWindows,
 			ADGF_DEMO,
 			Common::GUIO_NONE
 		},
