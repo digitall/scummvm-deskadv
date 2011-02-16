@@ -85,17 +85,23 @@ Common::Error DeskadvEngine::run() {
 
 	switch (getGameType()) {
 	case GType_Indy:
-		_resource->load("desktop.daw", false);
+		if (!_resource->load("desktop.daw", false))
+			error("Loading from DAW Resource File failed!");
 		break;
 	case GType_Yoda:
-		_resource->load("yodesk.dta", true);
+		if (!_resource->load("yodesk.dta", true))
+			error("Loading from DTA Resource File Failed!");
 		break;
 	default:
 		error("Unknown Game Type for Resource File...");
 		break;
 	}
 
-	// TODO: Load Mouse Cursors
+	// Load Mouse Cursors
+	if (getGameType() == GType_Indy)
+		_gfx->loadNECursors("deskadv.exe");
+	if (getGameType() == GType_Yoda)
+		warning("TODO: PE Loader needed for Yoda Stories Executable");
 	CursorMan.showMouse(true);
 
 	while (!shouldQuit()) {

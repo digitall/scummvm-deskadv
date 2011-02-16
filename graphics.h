@@ -23,10 +23,11 @@
  *
  */
 
-#include "graphics/surface.h"
-
 #ifndef DESKADV_GRAPHICS_H
 #define DESKADV_GRAPHICS_H
+
+#include "graphics/surface.h"
+#include "common/ne_exe.h"
 
 namespace Deskadv {
 
@@ -37,6 +38,8 @@ public:
 
 	void updateScreen(void);
 	void drawTile(uint32 ref, uint x, uint y);
+	void loadNECursors(const char *filename);
+	void changeCursor(uint id);
 
 	// Debug Routines
 	void viewPalette(void);
@@ -45,6 +48,8 @@ private:
 	DeskadvEngine *_vm;
 
 	Graphics::Surface *_screen;
+	Common::NEResources _ne;
+	Common::Array<Common::NECursorGroup> _NECursor;
 };
 
 } // End of namespace Deskadv

@@ -30,6 +30,7 @@
 #include "common/system.h"
 #include "common/debug.h"
 #include "common/debug-channels.h"
+#include "common/ne_exe.h"
 
 #include "engines/engine.h"
 #include "engines/util.h"

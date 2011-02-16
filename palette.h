@@ -28,6 +28,31 @@
 
 namespace Deskadv {
 
+// TODO: Not sure if palette uses any of the Win3.1 default palette indexes
+//       i.e. whether the palette setting skips these or overwrites them.
+// 1 - dark red
+// 2 - dark green
+// 3 - dark yellow
+// 4 - dark blue
+// 5 - dark magenta
+// 6 - dark cyan
+// 7 - light grey
+// 8 - money green
+// 9 - sky blue
+// --
+// 246 - cream
+// 247 - medium grey
+// 248 - dark grey
+// 249 - red
+// 250 - green
+// 251 - yellow
+// 252 - blue
+// 253 - magenta
+// 254 - cyan
+// --
+// 0 - black and 255 - white are also in W3.1 default palette, but are set here
+// to the same values so not critical if they are set or skipped.
+
 static const uint8 palette[1024] = {
 	0x00, 0x00, 0x00, 0x00, // 00
 	0x00, 0x00, 0x00, 0x00, // 01

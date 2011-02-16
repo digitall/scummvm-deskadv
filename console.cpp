@@ -31,6 +31,7 @@ namespace Deskadv {
 DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("viewPalette", WRAP_METHOD(DeskadvConsole, Cmd_ViewPalette));
 	DCmd_Register("drawTile", WRAP_METHOD(DeskadvConsole, Cmd_DrawTile));
+	DCmd_Register("changeCursor", WRAP_METHOD(DeskadvConsole, Cmd_ChangeCursor));
 }
 
 DeskadvConsole::~DeskadvConsole() {
@@ -53,6 +54,19 @@ bool DeskadvConsole::Cmd_DrawTile(int argc, const char **argv) {
 	_vm->_gfx->drawTile(ref, x, y);
 	_vm->_gfx->updateScreen();
 	return false;
+}
+
+bool DeskadvConsole::Cmd_ChangeCursor(int argc, const char **argv) {
+	if (argc != 2) {
+		DebugPrintf("changeCursor <id>\n");
+		return true;
+	}
+
+	uint id = atoi(argv[1]);
+
+	_vm->_gfx->changeCursor(id);
+	_vm->_gfx->updateScreen();
+	return true;
 }
 
 } // End of namespace Deskadv
