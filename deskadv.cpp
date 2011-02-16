@@ -63,7 +63,6 @@ DeskadvEngine::DeskadvEngine(OSystem *syst, const DeskadvGameDescription *gameDe
 	// TODO: Add Sound Mixer
 	// TODO: Add WAV Player for SFX
 	// TODO: Add Standard SMF Midi Player for Music
-	// TODO: Add BMP Loader for Bitmaps
 }
 
 DeskadvEngine::~DeskadvEngine() {
@@ -103,6 +102,12 @@ Common::Error DeskadvEngine::run() {
 	if (getGameType() == GType_Yoda)
 		warning("TODO: PE Loader needed for Yoda Stories Executable");
 	CursorMan.showMouse(true);
+
+	// TODO: Current BMPDecoder does not support this bitmap variant.
+	//if (getGameType() == GType_Indy) {
+	//	_gfx->loadBMP("wallppr.bmp", 0, 0);
+	//	_gfx->updateScreen();
+	//}
 
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");

@@ -40,6 +40,7 @@ public:
 	void drawTile(uint32 ref, uint x, uint y);
 	void loadNECursors(const char *filename);
 	void changeCursor(uint id);
+	void loadBMP(const char *filename, uint x, uint y);
 
 	// Debug Routines
 	void viewPalette(void);

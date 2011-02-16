@@ -31,6 +31,7 @@
 #include "common/file.h"
 
 #include "graphics/cursorman.h"
+#include "graphics/imagedec.h"
 
 namespace Deskadv {
 
@@ -117,6 +118,26 @@ void Gfx::changeCursor(uint id) {
 		// 20 -    Win3.1   Pointer with Move (0x790c)
 		CursorMan.replaceCursorPalette(cur->getPalette(), 0, 256);
 		CursorMan.replaceCursor(cur->getSurface(), cur->getWidth(), cur->getHeight(), cur->getHotspotX(), cur->getHotspotY(), 0);
+}
+
+void Gfx::loadBMP(const char *filename, uint x, uint y) {
+	Common::File imageFile;
+
+	if (!imageFile.open(filename))
+		error("LoadBMP : Failed to open \"%s\"", filename);
+
+	Graphics::Surface *image = Graphics::ImageDecoder::loadFile(imageFile, _vm->_system->getOverlayFormat());
+
+	if (image) {
+		// TODO: Format conversion needed?
+		for (uint i = 0; i < image->h; i++)
+			memcpy(_screen->getBasePtr(x, y+i), image->getBasePtr(0, i), image->w);
+
+		image->free();
+		delete image;
+	} else
+		warning("loadBMP failure!");
+	imageFile.close();
 }
 
 void Gfx::viewPalette(void) {
