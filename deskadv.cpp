@@ -48,6 +48,7 @@ DeskadvEngine::DeskadvEngine(OSystem *syst, const DeskadvGameDescription *gameDe
 	DebugMan.addDebugChannel(kDebugText, "Text", "Text Debug Flag");
 	DebugMan.addDebugChannel(kDebugCollision, "Collision", "Collision Debug Flag");
 	DebugMan.addDebugChannel(kDebugGraphics, "Graphics", "Graphics Debug Flag");
+	DebugMan.addDebugChannel(kDebugSound, "Sound", "Sound Debug Flag");
 
 	const Common::FSNode gameDataDir(ConfMan.get("path"));
 	SearchMan.addSubDirectoryMatching(gameDataDir, "bitmaps");
@@ -58,6 +59,7 @@ DeskadvEngine::DeskadvEngine(OSystem *syst, const DeskadvGameDescription *gameDe
 
 	_console = 0;
 	_gfx = 0;
+	_snd = 0;
 	_resource = 0;
 
 	// TODO: Add Sound Mixer
@@ -71,6 +73,7 @@ DeskadvEngine::~DeskadvEngine() {
 	delete _rnd;
 	delete _console;
 
+	delete _snd;
 	delete _resource;
 	delete _gfx;
 }
@@ -79,6 +82,7 @@ Common::Error DeskadvEngine::run() {
 	Common::Event event;
 
 	_gfx = new Gfx(this);
+	_snd = new Sound(this);
 	_console = new DeskadvConsole(this);
 	_resource = new Resource(this);
 

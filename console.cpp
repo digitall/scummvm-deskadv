@@ -32,6 +32,8 @@ DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("viewPalette", WRAP_METHOD(DeskadvConsole, Cmd_ViewPalette));
 	DCmd_Register("drawTile", WRAP_METHOD(DeskadvConsole, Cmd_DrawTile));
 	DCmd_Register("changeCursor", WRAP_METHOD(DeskadvConsole, Cmd_ChangeCursor));
+	DCmd_Register("listSounds", WRAP_METHOD(DeskadvConsole, Cmd_ListSounds));
+	DCmd_Register("playSound", WRAP_METHOD(DeskadvConsole, Cmd_PlaySound));
 }
 
 DeskadvConsole::~DeskadvConsole() {
@@ -66,6 +68,32 @@ bool DeskadvConsole::Cmd_ChangeCursor(int argc, const char **argv) {
 
 	_vm->_gfx->changeCursor(id);
 	_vm->_gfx->updateScreen();
+	return true;
+}
+
+bool DeskadvConsole::Cmd_ListSounds(int argc, const char **argv) {
+	if (argc != 1) {
+		DebugPrintf("listSounds\n");
+		return true;
+	}
+
+	for (int i = 0; i < _vm->_resource->getSoundCount(); i++)
+		DebugPrintf("Sound %d: \"%s\"\n", i, _vm->_resource->getSoundFilename(i));
+	return true;
+}
+
+bool DeskadvConsole::Cmd_PlaySound(int argc, const char **argv) {
+	if (argc != 2) {
+		DebugPrintf("playSound <ref>\n");
+		return true;
+	}
+
+	uint32 ref = atoi(argv[1]);
+
+	DebugPrintf("Playing Sound %d...\n", ref);
+	//_vm->_snd->playSFX(ref);
+	_vm->_snd->playMID(ref);
+
 	return true;
 }
 

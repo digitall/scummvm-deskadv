@@ -43,6 +43,8 @@ private:
 	bool Cmd_ViewPalette(int argc, const char **argv);
 	bool Cmd_DrawTile(int argc, const char **argv);
 	bool Cmd_ChangeCursor(int argc, const char **argv);
+	bool Cmd_ListSounds(int argc, const char **argv);
+	bool Cmd_PlaySound(int argc, const char **argv);
 };
 
 } // End of namespace Deskadv

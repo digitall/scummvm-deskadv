@@ -45,6 +45,9 @@ Resource::~Resource() {
 bool Resource::load(const char *filename, bool isYoda) {
 	// isYoda boolean switches between Indy DAW format and Yoda DTA format
 
+	// Multiple calls of load not supported.
+	assert(_file == 0);
+
 	_file = new Common::File();
 	if (!_file->open(filename))
 		return false;
@@ -99,6 +102,7 @@ bool Resource::load(const char *filename, bool isYoda) {
 				if (strsize != strname.size() + 1)
 					warning("String Length Mismatch");
 				debugC(1, kDebugResource, "sound \"%s\"", strname.c_str());
+				_soundFiles.push_back(strname);
 			}
 			assert (size == 0);
 		} else if (tag == Common::String("TNAM")) {
@@ -321,6 +325,15 @@ byte *Resource::getTileData(uint32 ref) {
 	_file->seek(_tileDataOffset + (ref * ((32 * 32) + 4)) + 4, SEEK_SET);
 	_file->read(data, 32 * 32);
 	return data;
+}
+
+const char *Resource::getSoundFilename(uint16 ref) {
+	if (ref >= _soundFiles.size()) {
+		warning("Sound::getSoundFilename(%d) ref is out of range", ref);
+		return 0;
+	}
+
+	return _soundFiles[ref].c_str();
 }
 
 } // End of namespace Deskadv

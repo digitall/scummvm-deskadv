@@ -6,7 +6,8 @@ MODULE_OBJS = \
 	detection.o \
 	graphics.o \
 	resource.o \
-	saveload.o
+	saveload.o \
+	sound.o
 
 # This module can be built as a plugin
 ifdef BUILD_PLUGINS

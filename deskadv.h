@@ -37,6 +37,7 @@
 
 #include "deskadv/console.h"
 #include "deskadv/graphics.h"
+#include "deskadv/sound.h"
 #include "deskadv/resource.h"
 
 namespace Deskadv {
@@ -58,7 +59,8 @@ enum {
 	kDebugScript    = (1 << 2),
 	kDebugText      = (1 << 3),
 	kDebugCollision = (1 << 4),
-	kDebugGraphics  = (1 << 5)
+	kDebugGraphics  = (1 << 5),
+	kDebugSound     = (1 << 6)
 };
 
 class DeskadvEngine : public Engine {
@@ -81,6 +83,7 @@ public:
 	GUI::Debugger *getDebugger() { return _console; }
 
 	Gfx *_gfx;
+	Sound *_snd;
 	Resource *_resource;
 
 private:

@@ -23,35 +23,35 @@
  *
  */
 
-#ifndef DESKADV_RESOURCE_H
-#define DESKADV_RESOURCE_H
+#ifndef DESKADV_SOUND_H
+#define DESKADV_SOUND_H
 
 #include "common/file.h"
+#include "audio/mixer.h"
+#include "audio/midiparser.h"
 
 namespace Deskadv {
 
 class DeskadvEngine;
 
-class Resource {
+class Sound {
 public:
-	Resource(DeskadvEngine *vm);
-	virtual ~Resource(void);
+	Sound(DeskadvEngine *vm);
+	virtual ~Sound(void);
 
-	bool load(const char *filename, bool isYoda);
-
-	uint32 getTileCount(void) { return _tileCount; }
-	byte *getTileData(uint32 ref);
-
-	uint16 getSoundCount(void) { return _soundFiles.size(); }
-	const char *getSoundFilename(uint16 ref);
+	void playSFX(uint32 ref);
+	void playMID(uint32 ref);
+	void stopSFX();
+	void stopMID();
 
 private:
 	DeskadvEngine *_vm;
 
-	Common::File *_file;
-	uint32 _tileCount;
-	uint32 _tileDataOffset;
-	Common::Array<Common::String> _soundFiles;
+	Common::File *_sfxFile;
+	Audio::SoundHandle _SFXSoundHandle;
+
+	byte *_midiData;
+	MidiParser *_midiPlayer;
 };
 
 } // End of namespace Deskadv
