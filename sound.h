@@ -39,6 +39,7 @@ public:
 	Sound(DeskadvEngine *vm);
 	virtual ~Sound(void);
 
+	void playSound(uint32 ref);
 	void playSFX(uint32 ref);
 	void playMID(uint32 ref);
 	void stopSFX();
@@ -51,6 +52,7 @@ private:
 	Audio::SoundHandle _SFXSoundHandle;
 
 	byte *_midiData;
+	MidiDriver *_midiDriver;
 	MidiParser *_midiPlayer;
 };
 

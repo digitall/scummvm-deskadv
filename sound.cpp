@@ -38,10 +38,11 @@ namespace Deskadv {
 
 Sound::Sound(DeskadvEngine *vm) : _vm(vm) {
 	MidiDriver::DeviceHandle dev = MidiDriver::detectDevice(MDT_MIDI | MDT_ADLIB | MDT_PREFER_GM);
-	MidiDriver *driver = MidiDriver::createMidi(dev);
+	_midiDriver = MidiDriver::createMidi(dev);
 	_midiPlayer = MidiParser::createParser_SMF();
-	_midiPlayer->setMidiDriver(driver);
-	_midiPlayer->setTimerRate(driver->getBaseTempo());
+	_midiPlayer->setMidiDriver(_midiDriver);
+	_midiPlayer->setTimerRate(_midiDriver->getBaseTempo());
+	_midiDriver->setTimerCallback(_midiPlayer, MidiParser::timerCallback);
 
 	_sfxFile = 0;
 	_midiData = 0;
@@ -51,7 +52,21 @@ Sound::~Sound() {
 	stopSFX();
 	stopMID();
 
+	_midiDriver->setTimerCallback(0, 0);
+	delete _midiDriver;
 	delete _midiPlayer;
+}
+
+void Sound::playSound(uint32 ref) {
+	Common::String filename = lastPathComponent(Common::String(_vm->_resource->getSoundFilename(ref)), '\\');
+	filename.toLowercase();
+
+	if (filename.hasSuffix("wav"))
+		playSFX(ref);
+	else if (filename.hasSuffix("mid"))
+		playMID(ref);
+	else
+		warning("playSound(%d) unrecognised file type \"%s\"", ref, filename.c_str());
 }
 
 void Sound::playSFX(uint32 ref) {
@@ -78,6 +93,7 @@ void Sound::playMID(uint32 ref) {
 	Common::File midiFile;
 	midiFile.open(filename);
 	uint32 mdSize = midiFile.size();
+	debugC(1, kDebugSound, "\tLoading MIDI File Data of size: %d", mdSize);
 	_midiData = new byte[mdSize];
 	midiFile.read(_midiData, mdSize);
 	_midiPlayer->loadMusic(_midiData, mdSize);

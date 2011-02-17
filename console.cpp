@@ -34,6 +34,7 @@ DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("changeCursor", WRAP_METHOD(DeskadvConsole, Cmd_ChangeCursor));
 	DCmd_Register("listSounds", WRAP_METHOD(DeskadvConsole, Cmd_ListSounds));
 	DCmd_Register("playSound", WRAP_METHOD(DeskadvConsole, Cmd_PlaySound));
+	DCmd_Register("stopSound", WRAP_METHOD(DeskadvConsole, Cmd_StopSound));
 }
 
 DeskadvConsole::~DeskadvConsole() {
@@ -91,8 +92,20 @@ bool DeskadvConsole::Cmd_PlaySound(int argc, const char **argv) {
 	uint32 ref = atoi(argv[1]);
 
 	DebugPrintf("Playing Sound %d...\n", ref);
-	//_vm->_snd->playSFX(ref);
-	_vm->_snd->playMID(ref);
+	_vm->_snd->playSound(ref);
+
+	return true;
+}
+
+bool DeskadvConsole::Cmd_StopSound(int argc, const char **argv) {
+	if (argc != 1) {
+		DebugPrintf("stopSound\n");
+		return true;
+	}
+
+	DebugPrintf("Stopping Sound\n");
+	_vm->_snd->stopSFX();
+	_vm->_snd->stopMID();
 
 	return true;
 }
