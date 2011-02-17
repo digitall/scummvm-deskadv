@@ -53,6 +53,7 @@ Sound::~Sound() {
 	stopMID();
 
 	_midiDriver->setTimerCallback(0, 0);
+	_midiPlayer->setMidiDriver(0);
 	delete _midiDriver;
 	delete _midiPlayer;
 }
@@ -118,7 +119,7 @@ void Sound::stopMID(void) {
 	_midiPlayer->stopPlaying();
 	_midiPlayer->unloadMusic();
 
-	delete _midiData;
+	delete[] _midiData;
 	_midiData = 0;
 }
 
