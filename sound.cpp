@@ -39,6 +39,7 @@ namespace Deskadv {
 Sound::Sound(DeskadvEngine *vm) : _vm(vm) {
 	MidiDriver::DeviceHandle dev = MidiDriver::detectDevice(MDT_MIDI | MDT_ADLIB | MDT_PREFER_GM);
 	_midiDriver = MidiDriver::createMidi(dev);
+	_midiDriver->open();
 	_midiPlayer = MidiParser::createParser_SMF();
 	_midiPlayer->setMidiDriver(_midiDriver);
 	_midiPlayer->setTimerRate(_midiDriver->getBaseTempo());
@@ -53,6 +54,7 @@ Sound::~Sound() {
 	stopMID();
 
 	_midiDriver->setTimerCallback(0, 0);
+	_midiDriver->close();
 	_midiPlayer->setMidiDriver(0);
 	delete _midiDriver;
 	delete _midiPlayer;

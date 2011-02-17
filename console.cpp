@@ -94,7 +94,7 @@ bool DeskadvConsole::Cmd_PlaySound(int argc, const char **argv) {
 	DebugPrintf("Playing Sound %d...\n", ref);
 	_vm->_snd->playSound(ref);
 
-	return true;
+	return false;
 }
 
 bool DeskadvConsole::Cmd_StopSound(int argc, const char **argv) {
