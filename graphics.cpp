@@ -36,7 +36,7 @@
 namespace Deskadv {
 
 static const uint screenWidth = 508;
-static const uint screenHeight = 328;
+static const uint screenHeight = 332;
 
 Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 	initGraphics(screenWidth, screenHeight, true);
@@ -199,7 +199,7 @@ void Gfx::drawScreenOutline(void) {
 
 	// Weapon
 	// TODO
-	Common::Rect weaponRect(13+288+(2*32), 31+288-32-16, 13+288+(3*32), 31+288-16);
+	Common::Rect weaponRect(13+288+(2*32), 31+288-32-8, 13+288+(3*32), 31+288-8);
 	_screen->fillRect(weaponRect, BLACK);
 
 	// Health Meter
