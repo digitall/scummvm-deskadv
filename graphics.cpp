@@ -83,44 +83,44 @@ void Gfx::drawTile(uint32 ref, uint x, uint y) {
 }
 
 void Gfx::loadNECursors(const char *filename) {
-		_ne.loadFromEXE(filename);
-		_NECursor = _ne.getCursors();
-		debugC(1, kDebugGraphics, "Loading NE Cursors: Found %d", _NECursor.size());
-		for (uint i = 0; i < _NECursor.size(); i++)
-			debugC(1, kDebugGraphics, "\tFound %d Cursors of Resource id: %s", _NECursor[i].cursors.size(), _NECursor[i].id.toString().c_str());
+	_ne.loadFromEXE(filename);
+	_NECursor = _ne.getCursors();
+	debugC(1, kDebugGraphics, "Loading NE Cursors: Found %d", _NECursor.size());
+	for (uint i = 0; i < _NECursor.size(); i++)
+		debugC(1, kDebugGraphics, "\tFound %d Cursors of Resource id: %s", _NECursor[i].cursors.size(), _NECursor[i].id.toString().c_str());
 }
 
 void Gfx::changeCursor(uint id) {
-		if (id >= _NECursor.size()) {
-			warning("Attempted to set invalid cursor id:%d", id);
-			return;
-		}
+	if (id >= _NECursor.size()) {
+		warning("Attempted to set invalid cursor id:%d", id);
+		return;
+	}
 
-		const Common::NECursor *cur = _NECursor[id].cursors[0];
-		//  0 -       Left Arrow White Filled (0x006a)
-		//  1 -      Right Arrow White Filled (0x006b)
-		//  2 -         Up Arrow White Filled (0x006c)
-		//  3 -       Down Arrow White Filled (0x006d)
-		//  4 -    Up-Left Arrow White Filled (0x0071)
-		//  5 -   Up-Right Arrow White Filled (0x0072)
-		//  6 -  Down-Left Arrow White Filled (0x0073)
-		//  7 - Down-Right Arrow White Filled (0x0074)
-		//  8 -            Cross White Filled (0x0076)
-		//  9 -             Hand White Filled (0x00c2)
-		//
-		// 10 -    Win3.1        Context Help (0x7901)
-		// 11 -    Win3.1         Move Window (0x7903)
-		// 12 -    Win3.1   Horizontal Resize (0x7904)
-		// 13 -    Win3.1     Vertical Resize (0x7905)
-		// 14 -    Win3.1            No Entry (0x7906)
-		// 15 -    Win3.1 Bottom Right Resize (0x7907)
-		// 16 -    Win3.1 Bottom  Left Resize (0x7908)
-		// 17 -    Win3.1 Vertical     Resize (0x7909)
-		// 18 -    Win3.1 Horizontal   Resize (0x790a)
-		// 19 -    Win3.1 Move         Window (0x790b)
-		// 20 -    Win3.1   Pointer with Move (0x790c)
-		CursorMan.replaceCursorPalette(cur->getPalette(), 0, 256);
-		CursorMan.replaceCursor(cur->getSurface(), cur->getWidth(), cur->getHeight(), cur->getHotspotX(), cur->getHotspotY(), 0);
+	const Common::NECursor *cur = _NECursor[id].cursors[0];
+	//  0 -       Left Arrow White Filled (0x006a)
+	//  1 -      Right Arrow White Filled (0x006b)
+	//  2 -         Up Arrow White Filled (0x006c)
+	//  3 -       Down Arrow White Filled (0x006d)
+	//  4 -    Up-Left Arrow White Filled (0x0071)
+	//  5 -   Up-Right Arrow White Filled (0x0072)
+	//  6 -  Down-Left Arrow White Filled (0x0073)
+	//  7 - Down-Right Arrow White Filled (0x0074)
+	//  8 -            Cross White Filled (0x0076)
+	//  9 -             Hand White Filled (0x00c2)
+	//
+	// 10 -    Win3.1        Context Help (0x7901)
+	// 11 -    Win3.1         Move Window (0x7903)
+	// 12 -    Win3.1   Horizontal Resize (0x7904)
+	// 13 -    Win3.1     Vertical Resize (0x7905)
+	// 14 -    Win3.1            No Entry (0x7906)
+	// 15 -    Win3.1 Bottom Right Resize (0x7907)
+	// 16 -    Win3.1 Bottom  Left Resize (0x7908)
+	// 17 -    Win3.1 Vertical     Resize (0x7909)
+	// 18 -    Win3.1 Horizontal   Resize (0x790a)
+	// 19 -    Win3.1 Move         Window (0x790b)
+	// 20 -    Win3.1   Pointer with Move (0x790c)
+	CursorMan.replaceCursorPalette(cur->getPalette(), 0, 256);
+	CursorMan.replaceCursor(cur->getSurface(), cur->getWidth(), cur->getHeight(), cur->getHotspotX(), cur->getHotspotY(), 0);
 }
 
 void Gfx::loadBMP(const char *filename, uint x, uint y) {
