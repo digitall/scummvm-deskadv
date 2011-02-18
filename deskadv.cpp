@@ -113,6 +113,9 @@ Common::Error DeskadvEngine::run() {
 	//	_gfx->updateScreen();
 	//}
 
+	_gfx->drawScreenOutline();
+	_gfx->updateScreen();
+
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");
 
@@ -156,6 +159,7 @@ Common::Error DeskadvEngine::run() {
 			}
 		}
 
+		_gfx->updateScreen();
 		_system->delayMillis(50);
 	}
 

@@ -35,11 +35,14 @@
 
 namespace Deskadv {
 
+static const uint screenWidth = 508;
+static const uint screenHeight = 328;
+
 Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
-	initGraphics(320, 200, false);
+	initGraphics(screenWidth, screenHeight, true);
 
 	_screen = new Graphics::Surface();
-	_screen->create(320, 200, 1);
+	_screen->create(screenWidth, screenHeight, 1);
 
 	// Code to load palette from dump file
 	// TODO: Need to identify offset in executable and load from there.
@@ -67,7 +70,7 @@ Gfx::~Gfx() {
 
 void Gfx::updateScreen(void) {
 	debugC(1, kDebugGraphics, "Gfx::updateScreen()");
-	_vm->_system->copyRectToScreen((byte *)_screen->pixels, _screen->pitch, 0, 0, 320, 200);
+	_vm->_system->copyRectToScreen((byte *)_screen->pixels, _screen->pitch, 0, 0, screenWidth, screenHeight);
 	_vm->_system->updateScreen();
 }
 
@@ -138,6 +141,69 @@ void Gfx::loadBMP(const char *filename, uint x, uint y) {
 	} else
 		warning("loadBMP failure!");
 	imageFile.close();
+}
+
+void Gfx::drawScreenOutline(void) {
+	Common::Rect rect(1, 1, screenWidth-1, screenHeight-1);
+	_screen->fillRect(rect, MEDIUM_GREY);
+	_screen->hLine(0, 18, screenWidth-1, BLACK);
+
+	// Outer - Left Border
+	_screen->vLine(1, 19+0, screenHeight-2, LIGHT_GREY);
+	_screen->vLine(2, 19+1, screenHeight-3, LIGHT_GREY);
+	_screen->vLine(3, 19+2, screenHeight-4, LIGHT_GREY);
+
+	// Outer - Right Border
+	_screen->vLine(screenWidth-2, 19+0, screenHeight-2, DARK_GREY);
+	_screen->vLine(screenWidth-3, 19+1, screenHeight-3, DARK_GREY);
+	_screen->vLine(screenWidth-4, 19+2, screenHeight-4, DARK_GREY);
+
+	// Outer - Top Border
+	_screen->hLine(2, 19+0, screenWidth-2, LIGHT_GREY);
+	_screen->hLine(3, 19+1, screenWidth-3, LIGHT_GREY);
+	_screen->hLine(4, 19+2, screenWidth-4, LIGHT_GREY);
+
+	// Outer - Bottom Border
+	_screen->hLine(3, screenHeight-4, screenWidth-5, DARK_GREY);
+	_screen->hLine(2, screenHeight-3, screenWidth-4, DARK_GREY);
+	_screen->hLine(1, screenHeight-2, screenWidth-3, DARK_GREY);
+
+	Common::Rect tileRect(13, 31, 13+(9*32), 31+(9*32));
+	_screen->fillRect(tileRect, BLACK);
+
+	// TileArea - Left Border
+	_screen->vLine(13-3, 31-3, 31+(9*32)+3, DARK_GREY);
+	_screen->vLine(13-2, 31-2, 31+(9*32)+2, DARK_GREY);
+	_screen->vLine(13-1, 31-1, 31+(9*32)+1, DARK_GREY);
+
+	// TileArea - Right Border
+	_screen->vLine(13+(9*32)+1, 31-1, 31+(9*32)+1, LIGHT_GREY);
+	_screen->vLine(13+(9*32)+2, 31-2, 31+(9*32)+2, LIGHT_GREY);
+	_screen->vLine(13+(9*32)+3, 31-3, 31+(9*32)+3, LIGHT_GREY);
+
+	// TileArea - Top Border
+	_screen->hLine(13-3, 31-3, 13+(9*32)+3, DARK_GREY);
+	_screen->hLine(13-2, 31-2, 13+(9*32)+2, DARK_GREY);
+	_screen->hLine(13-1, 31-1, 13+(9*32)+1, DARK_GREY);
+
+	// TileArea - Bottom Border
+	_screen->hLine(13-1, 31+(9*32)+1, 13+(9*32)+1, LIGHT_GREY);
+	_screen->hLine(13-2, 31+(9*32)+2, 13+(9*32)+2, LIGHT_GREY);
+	_screen->hLine(13-3, 31+(9*32)+3, 13+(9*32)+3, LIGHT_GREY);
+
+	// Inventory
+	// TODO
+
+	// Direction Arrows
+	// TODO
+
+	// Weapon
+	// TODO
+	Common::Rect weaponRect(13+288+(2*32), 31+288-32-16, 13+288+(3*32), 31+288-16);
+	_screen->fillRect(weaponRect, BLACK);
+
+	// Health Meter
+	// TODO
 }
 
 void Gfx::viewPalette(void) {

@@ -42,6 +42,8 @@ public:
 	void changeCursor(uint id);
 	void loadBMP(const char *filename, uint x, uint y);
 
+	void drawScreenOutline(void);
+
 	// Debug Routines
 	void viewPalette(void);
 
