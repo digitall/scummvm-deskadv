@@ -55,6 +55,7 @@ namespace Deskadv {
 
 const static uint       BLACK =   0;
 const static uint  LIGHT_GREY =   7;
+const static uint  POWER_BLUE = 204;
 const static uint MEDIUM_GREY = 247;
 const static uint   DARK_GREY = 248;
 const static uint       WHITE = 255;

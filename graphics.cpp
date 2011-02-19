@@ -143,67 +143,68 @@ void Gfx::loadBMP(const char *filename, uint x, uint y) {
 	imageFile.close();
 }
 
+static const Common::Rect tileArea(13, 31, 13+(9*32), 31+(9*32));
+static const Common::Rect weaponArea(383, 275, 383+32, 275+32);
+static const Common::Rect weaponPowerArea(367, 275, 367+8, 275+32);
+
 void Gfx::drawScreenOutline(void) {
 	Common::Rect rect(1, 1, screenWidth-1, screenHeight-1);
 	_screen->fillRect(rect, MEDIUM_GREY);
 	_screen->hLine(0, 18, screenWidth-1, BLACK);
 
-	// Outer - Left Border
-	_screen->vLine(1, 19+0, screenHeight-2, LIGHT_GREY);
-	_screen->vLine(2, 19+1, screenHeight-3, LIGHT_GREY);
-	_screen->vLine(3, 19+2, screenHeight-4, LIGHT_GREY);
+	Common::Rect outer(4, 22, screenWidth-4, screenHeight-4);
+	drawShadowFrame(&outer, false, false, 3);
 
-	// Outer - Right Border
-	_screen->vLine(screenWidth-2, 19+0, screenHeight-2, DARK_GREY);
-	_screen->vLine(screenWidth-3, 19+1, screenHeight-3, DARK_GREY);
-	_screen->vLine(screenWidth-4, 19+2, screenHeight-4, DARK_GREY);
-
-	// Outer - Top Border
-	_screen->hLine(2, 19+0, screenWidth-2, LIGHT_GREY);
-	_screen->hLine(3, 19+1, screenWidth-3, LIGHT_GREY);
-	_screen->hLine(4, 19+2, screenWidth-4, LIGHT_GREY);
-
-	// Outer - Bottom Border
-	_screen->hLine(3, screenHeight-4, screenWidth-5, DARK_GREY);
-	_screen->hLine(2, screenHeight-3, screenWidth-4, DARK_GREY);
-	_screen->hLine(1, screenHeight-2, screenWidth-3, DARK_GREY);
-
-	Common::Rect tileRect(13, 31, 13+(9*32), 31+(9*32));
-	_screen->fillRect(tileRect, BLACK);
-
-	// TileArea - Left Border
-	_screen->vLine(13-3, 31-3, 31+(9*32)+3, DARK_GREY);
-	_screen->vLine(13-2, 31-2, 31+(9*32)+2, DARK_GREY);
-	_screen->vLine(13-1, 31-1, 31+(9*32)+1, DARK_GREY);
-
-	// TileArea - Right Border
-	_screen->vLine(13+(9*32)+1, 31-1, 31+(9*32)+1, LIGHT_GREY);
-	_screen->vLine(13+(9*32)+2, 31-2, 31+(9*32)+2, LIGHT_GREY);
-	_screen->vLine(13+(9*32)+3, 31-3, 31+(9*32)+3, LIGHT_GREY);
-
-	// TileArea - Top Border
-	_screen->hLine(13-3, 31-3, 13+(9*32)+3, DARK_GREY);
-	_screen->hLine(13-2, 31-2, 13+(9*32)+2, DARK_GREY);
-	_screen->hLine(13-1, 31-1, 13+(9*32)+1, DARK_GREY);
-
-	// TileArea - Bottom Border
-	_screen->hLine(13-1, 31+(9*32)+1, 13+(9*32)+1, LIGHT_GREY);
-	_screen->hLine(13-2, 31+(9*32)+2, 13+(9*32)+2, LIGHT_GREY);
-	_screen->hLine(13-3, 31+(9*32)+3, 13+(9*32)+3, LIGHT_GREY);
+	_screen->fillRect(tileArea, BLACK);
+	drawShadowFrame(&tileArea, true, false, 3);
 
 	// Inventory
 	// TODO
 
-	// Direction Arrows
+	// Direction Arrows Outline
 	// TODO
 
-	// Weapon
-	// TODO
-	Common::Rect weaponRect(13+288+(2*32), 31+288-32-8, 13+288+(3*32), 31+288-8);
-	_screen->fillRect(weaponRect, BLACK);
+	// WeaponArea
+	drawShadowFrame(&weaponArea, true, true, 3);
+	if (_vm->getGameType() == GType_Yoda) {
+		drawShadowFrame(&weaponPowerArea, true, true, 3);
+
+		// TODO: Need to work out which color index is mapped to (0x8b, 0x8b, 0xb3)
+		//_screen->fillRect(weaponArea, LIGHT_PURPLE);
+		//_screen->fillRect(weaponPowerArea, LIGHT_PURPLE);
+	}
 
 	// Health Meter
 	// TODO
+}
+
+void Gfx::drawWeapon(uint32 ref) {
+	drawTile(ref, weaponArea.left, weaponArea.top);
+}
+
+void Gfx::drawWeaponPower(uint8 level) {
+	if (_vm->getGameType() != GType_Yoda) {
+		warning("Unexpected Gfx::drawWeaponPower()!");
+		return;
+	}
+
+	if (level > 31) {
+		warning("Gfx::drawWeaponPower() level clamped to maximum.");
+		level = 31;
+	}
+
+	uint color = BLACK;
+	for (uint8 i = 0; i < 32; i++) {
+		if (i > level)
+			color = MEDIUM_GREY;
+		else
+			color = POWER_BLUE;
+		_screen->hLine(weaponPowerArea.left, weaponPowerArea.bottom-i, weaponPowerArea.right, color);
+	}
+}
+
+void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {
+	// TODO: Write Code
 }
 
 void Gfx::viewPalette(void) {
@@ -217,6 +218,35 @@ void Gfx::viewPalette(void) {
 	}
 
 	updateScreen();
+}
+
+void Gfx::drawShadowFrame(const Common::Rect *rect, bool recessed, bool firstInverse, uint thickness) {
+	// Shadow as if lit from top left corner.
+
+	uint TLColor, BRColor;
+	if (recessed) {
+		// rect sub-area recessed
+		TLColor = DARK_GREY;
+		BRColor = LIGHT_GREY;
+	} else {
+		// rect sub-area raised
+		TLColor = LIGHT_GREY;
+		BRColor = DARK_GREY;
+	}
+
+	for (uint i = 0; i < thickness; i++) {
+		// Left Border
+		_screen->vLine(rect->left-1-i, rect->top-1-i, rect->bottom-1+1+i, (firstInverse && i == 0) ? BRColor : TLColor);
+
+		// Right Border
+		_screen->vLine(rect->right-1+1+i, rect->top-1-i, rect->bottom-1+1+i, (firstInverse && i == 0) ? TLColor : BRColor);
+
+		// Top Border
+		_screen->hLine(rect->left-1-i, rect->top-1-i, rect->right-1+1+i, (firstInverse && i == 0) ? BRColor : TLColor);
+
+		// Bottom Border
+		_screen->hLine(rect->left-1-i, rect->bottom-1+1+i, rect->right-1+1+i, (firstInverse && i == 0) ? TLColor : BRColor);
+	}
 }
 
 } // End of namespace Deskadv

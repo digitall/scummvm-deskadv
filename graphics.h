@@ -43,6 +43,9 @@ public:
 	void loadBMP(const char *filename, uint x, uint y);
 
 	void drawScreenOutline(void);
+	void drawWeapon(uint32 ref);
+	void drawWeaponPower(uint8 level);
+	void drawDirectionArrows(bool left, bool up, bool right, bool down);
 
 	// Debug Routines
 	void viewPalette(void);
@@ -53,6 +56,8 @@ private:
 	Graphics::Surface *_screen;
 	Common::NEResources _ne;
 	Common::Array<Common::NECursorGroup> _NECursor;
+
+	void drawShadowFrame(const Common::Rect *rect, bool recessed, bool firstInverse, uint thickness);
 };
 
 } // End of namespace Deskadv
