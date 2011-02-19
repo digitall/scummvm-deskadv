@@ -50,17 +50,18 @@ Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 	if (!pal.open("yopal.1")) {
 		error("Failed to open yopal.1");
 	}
-	debug("static const uint8 palette[1024] = {");
+	debug("static const uint8 palette[768] = {");
 	for(uint32 i = 0; i < 256; i++) {
 		debugN("\t0x%02x, ", pal.readByte());
 		debugN("0x%02x, ", pal.readByte());
 		debugN("0x%02x, ", pal.readByte());
-		debug("0x%02x, // %02d", pal.readByte(), i);
+		pal.readByte();
+		debug(" // %02d", i);
 	}
 	debug("\t};");
 	pal.close();*/
 
-	_vm->_system->getPaletteManager()->setPalette(palette, 0, sizeof(palette)/4);
+	_vm->_system->getPaletteManager()->setPalette(palette, 0, sizeof(palette)/3);
 }
 
 Gfx::~Gfx() {
