@@ -145,6 +145,13 @@ void Gfx::loadBMP(const char *filename, uint x, uint y) {
 }
 
 static const Common::Rect tileArea(13, 31, 13+(9*32), 31+(9*32));
+
+// Reference is Apex Of Arrow
+static const Common::Point UpArrow(341, 269);
+static const Common::Point DownArrow(341, 311);
+static const Common::Point LeftArrow(320, 290);
+static const Common::Point RightArrow(362, 290);
+
 static const Common::Rect weaponArea(383, 275, 383+32, 275+32);
 static const Common::Rect weaponPowerArea(367, 275, 367+8, 275+32);
 
@@ -163,7 +170,65 @@ void Gfx::drawScreenOutline(void) {
 	// TODO
 
 	// Direction Arrows Outline
-	// TODO
+	// Up Arrow
+	_screen->drawLine(UpArrow.x, UpArrow.y, UpArrow.x-7, UpArrow.y+7, ARROW_SHADOW);
+	_screen->drawLine(UpArrow.x, UpArrow.y, UpArrow.x+7, UpArrow.y+7, ARROW_SHADOW);
+
+	_screen->drawLine(UpArrow.x-7, UpArrow.y+7, UpArrow.x-7, UpArrow.y+7+2, ARROW_SHADOW);
+	_screen->drawLine(UpArrow.x+7, UpArrow.y+7, UpArrow.x+7, UpArrow.y+7+2, ARROW_SHADOW);
+
+	_screen->drawLine(UpArrow.x-7, UpArrow.y+7+2, UpArrow.x-3, UpArrow.y+7+2, WHITE);
+	_screen->drawLine(UpArrow.x+7, UpArrow.y+7+2, UpArrow.x+3, UpArrow.y+7+2, WHITE);
+
+	_screen->drawLine(UpArrow.x-3, UpArrow.y+7+2, UpArrow.x-3, UpArrow.y+7+2+4, ARROW_SHADOW);
+	_screen->drawLine(UpArrow.x+3, UpArrow.y+7+2, UpArrow.x+3, UpArrow.y+7+2+4, WHITE);
+
+	_screen->drawLine(UpArrow.x-3, UpArrow.y+7+2+4, UpArrow.x+3, UpArrow.y+7+2+4, WHITE);
+
+	// Down Arrow
+	_screen->drawLine(DownArrow.x, DownArrow.y, DownArrow.x-7, DownArrow.y-7, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x, DownArrow.y, DownArrow.x+7, DownArrow.y-7, WHITE);
+
+	_screen->drawLine(DownArrow.x-7, DownArrow.y-7, DownArrow.x-7, DownArrow.y-7-2, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x+7, DownArrow.y-7, DownArrow.x+7, DownArrow.y-7-2, ARROW_SHADOW);
+
+	_screen->drawLine(DownArrow.x-7, DownArrow.y-7-2, DownArrow.x-3, DownArrow.y-7-2, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x+7, DownArrow.y-7-2, DownArrow.x+3, DownArrow.y-7-2, ARROW_SHADOW);
+
+	_screen->drawLine(DownArrow.x-3, DownArrow.y-7-2, DownArrow.x-3, DownArrow.y-7-2-4, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x+3, DownArrow.y-7-2, DownArrow.x+3, DownArrow.y-7-2-4, WHITE);
+
+	_screen->drawLine(DownArrow.x-3, DownArrow.y-7-2-4, DownArrow.x+3, DownArrow.y-7-2-4, ARROW_SHADOW);
+
+	// Left Arrow
+	_screen->drawLine(LeftArrow.x, LeftArrow.y, LeftArrow.x+7, LeftArrow.y-7, ARROW_SHADOW);
+	_screen->drawLine(LeftArrow.x, LeftArrow.y, LeftArrow.x+7, LeftArrow.y+7, ARROW_SHADOW);
+
+	_screen->drawLine(LeftArrow.x+7, LeftArrow.y-7, LeftArrow.x+7+2, LeftArrow.y-7, ARROW_SHADOW);
+	_screen->drawLine(LeftArrow.x+7, LeftArrow.y+7, LeftArrow.x+7+2, LeftArrow.y+7, WHITE);
+
+	_screen->drawLine(LeftArrow.x+7+2, LeftArrow.y-7, LeftArrow.x+7+2, LeftArrow.y-7+4, WHITE);
+	_screen->drawLine(LeftArrow.x+7+2, LeftArrow.y+7, LeftArrow.x+7+2, LeftArrow.y+7-4, WHITE);
+
+	_screen->drawLine(LeftArrow.x+7+2, LeftArrow.y-7+4, LeftArrow.x+7+2+4, LeftArrow.y-7+4, ARROW_SHADOW);
+	_screen->drawLine(LeftArrow.x+7+2, LeftArrow.y+7-4, LeftArrow.x+7+2+4, LeftArrow.y+7-4, WHITE);
+
+	_screen->drawLine(LeftArrow.x+7+2+4, LeftArrow.y-7+4, LeftArrow.x+7+2+4, LeftArrow.y+7-4, WHITE);
+
+	// Right Arrow
+	_screen->drawLine(RightArrow.x, RightArrow.y, RightArrow.x-7, RightArrow.y-7, ARROW_SHADOW);
+	_screen->drawLine(RightArrow.x, RightArrow.y, RightArrow.x-7, RightArrow.y+7, WHITE);
+
+	_screen->drawLine(RightArrow.x-7, RightArrow.y-7, RightArrow.x-7-2, RightArrow.y-7, ARROW_SHADOW);
+	_screen->drawLine(RightArrow.x-7, RightArrow.y+7, RightArrow.x-7-2, RightArrow.y+7, WHITE);
+
+	_screen->drawLine(RightArrow.x-7-2, RightArrow.y-7, RightArrow.x-7-2, RightArrow.y-7+4, ARROW_SHADOW);
+	_screen->drawLine(RightArrow.x-7-2, RightArrow.y+7, RightArrow.x-7-2, RightArrow.y+7-4, ARROW_SHADOW);
+
+	_screen->drawLine(RightArrow.x-7-2, RightArrow.y-7+4, RightArrow.x-7-2-4, RightArrow.y-7+4, ARROW_SHADOW);
+	_screen->drawLine(RightArrow.x-7-2, RightArrow.y+7-4, RightArrow.x-7-2-4, RightArrow.y+7-4, WHITE);
+
+	_screen->drawLine(RightArrow.x-7-2-4, RightArrow.y-7+4, RightArrow.x-7-2-4, RightArrow.y+7-4, ARROW_SHADOW);
 
 	// WeaponArea
 	drawShadowFrame(&weaponArea, true, true, 3);
@@ -176,7 +241,10 @@ void Gfx::drawScreenOutline(void) {
 	}
 
 	// Health Meter
-	// TODO
+	// TODO 24 levels i.e. 3 levels of 8
+	// Draw Pie shaped polygon.. or wedged shaped and mask over with grey outer
+	// at end. Just use arbitary line drawing from centre to perimeter...
+	// GREEN, HEALTH_YELLOW, HEALTH_RED, BLACK
 }
 
 void Gfx::drawWeapon(uint32 ref) {

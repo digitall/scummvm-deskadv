@@ -53,12 +53,16 @@ namespace Deskadv {
 // 0 - black and 255 - white are also in W3.1 default palette, but are set here
 // to the same values so not critical if they are set or skipped.
 
-const static uint       BLACK =   0;
-const static uint  LIGHT_GREY =   7;
-const static uint  POWER_BLUE = 204;
-const static uint MEDIUM_GREY = 247;
-const static uint   DARK_GREY = 248;
-const static uint       WHITE = 255;
+const static uint         BLACK =   0;
+const static uint    LIGHT_GREY =   7;
+const static uint  ARROW_SHADOW =  24;
+const static uint         GREEN = 200;
+const static uint HEALTH_YELLOW = 202;
+const static uint    HEALTH_RED = 203;
+const static uint    POWER_BLUE = 204;
+const static uint   MEDIUM_GREY = 247;
+const static uint     DARK_GREY = 248;
+const static uint         WHITE = 255;
 
 static const uint8 palette[768] = {
 	0x00, 0x00, 0x00, // 00
