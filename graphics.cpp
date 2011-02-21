@@ -35,7 +35,7 @@
 
 namespace Deskadv {
 
-static const uint screenWidth = 508;
+static const uint screenWidth = 524;
 static const uint screenHeight = 332;
 
 Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
@@ -146,6 +146,9 @@ void Gfx::loadBMP(const char *filename, uint x, uint y) {
 
 static const Common::Rect tileArea(13, 31, 13+(9*32), 31+(9*32));
 
+static const Common::Rect InvIcon0(314, 31, 314+32, 31+32);
+static const Common::Rect InvDesc0(314+33, 31, 314+33+147, 31+32);
+
 // Reference is Apex Of Arrow
 static const Common::Point UpArrow(341, 269);
 static const Common::Point DownArrow(341, 311);
@@ -167,7 +170,25 @@ void Gfx::drawScreenOutline(void) {
 	drawShadowFrame(&tileArea, true, false, 3);
 
 	// Inventory
-	// TODO
+	static const Common::Rect InvOuter(314, 31, 494, 31+(7*32));
+	drawShadowFrame(&InvOuter, true, true, 3);
+
+	Common::Rect InvIcon = InvIcon0;
+	for (uint i = 0; i < 7; i++) {
+		drawShadowFrame(&InvIcon, true, false, 1);
+		InvIcon.translate(0, 32);
+	}
+
+	Common::Rect InvDesc = InvDesc0;
+	for (uint i = 0; i < 7; i++) {
+		drawShadowFrame(&InvDesc, true, false, 1);
+		InvDesc.translate(0, 32);
+	}
+
+	// Inventory Scroll Bar
+	static const Common::Rect InvScroll(503, 31, 503+12, 31+(7*32));
+	drawShadowFrame(&InvScroll, true, false, 3);
+	_screen->fillRect(InvScroll, LIGHT_GREY);
 
 	// Direction Arrows Outline
 	// Up Arrow
@@ -177,13 +198,13 @@ void Gfx::drawScreenOutline(void) {
 	_screen->drawLine(UpArrow.x-7, UpArrow.y+7, UpArrow.x-7, UpArrow.y+7+2, ARROW_SHADOW);
 	_screen->drawLine(UpArrow.x+7, UpArrow.y+7, UpArrow.x+7, UpArrow.y+7+2, ARROW_SHADOW);
 
-	_screen->drawLine(UpArrow.x-7, UpArrow.y+7+2, UpArrow.x-3, UpArrow.y+7+2, WHITE);
-	_screen->drawLine(UpArrow.x+7, UpArrow.y+7+2, UpArrow.x+3, UpArrow.y+7+2, WHITE);
+	_screen->drawLine(UpArrow.x-7, UpArrow.y+7+2, UpArrow.x-7+4, UpArrow.y+7+2, WHITE);
+	_screen->drawLine(UpArrow.x+7, UpArrow.y+7+2, UpArrow.x+7-4, UpArrow.y+7+2, WHITE);
 
-	_screen->drawLine(UpArrow.x-3, UpArrow.y+7+2, UpArrow.x-3, UpArrow.y+7+2+4, ARROW_SHADOW);
-	_screen->drawLine(UpArrow.x+3, UpArrow.y+7+2, UpArrow.x+3, UpArrow.y+7+2+4, WHITE);
+	_screen->drawLine(UpArrow.x-7+4, UpArrow.y+7+2, UpArrow.x-7+4, UpArrow.y+7+2+4, ARROW_SHADOW);
+	_screen->drawLine(UpArrow.x+7-4, UpArrow.y+7+2, UpArrow.x+7-4, UpArrow.y+7+2+4, WHITE);
 
-	_screen->drawLine(UpArrow.x-3, UpArrow.y+7+2+4, UpArrow.x+3, UpArrow.y+7+2+4, WHITE);
+	_screen->drawLine(UpArrow.x-7+4, UpArrow.y+7+2+4, UpArrow.x+7-4, UpArrow.y+7+2+4, WHITE);
 
 	// Down Arrow
 	_screen->drawLine(DownArrow.x, DownArrow.y, DownArrow.x-7, DownArrow.y-7, ARROW_SHADOW);
@@ -192,13 +213,13 @@ void Gfx::drawScreenOutline(void) {
 	_screen->drawLine(DownArrow.x-7, DownArrow.y-7, DownArrow.x-7, DownArrow.y-7-2, ARROW_SHADOW);
 	_screen->drawLine(DownArrow.x+7, DownArrow.y-7, DownArrow.x+7, DownArrow.y-7-2, ARROW_SHADOW);
 
-	_screen->drawLine(DownArrow.x-7, DownArrow.y-7-2, DownArrow.x-3, DownArrow.y-7-2, ARROW_SHADOW);
-	_screen->drawLine(DownArrow.x+7, DownArrow.y-7-2, DownArrow.x+3, DownArrow.y-7-2, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x-7, DownArrow.y-7-2, DownArrow.x-7+4, DownArrow.y-7-2, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x+7, DownArrow.y-7-2, DownArrow.x+7-4, DownArrow.y-7-2, ARROW_SHADOW);
 
-	_screen->drawLine(DownArrow.x-3, DownArrow.y-7-2, DownArrow.x-3, DownArrow.y-7-2-4, ARROW_SHADOW);
-	_screen->drawLine(DownArrow.x+3, DownArrow.y-7-2, DownArrow.x+3, DownArrow.y-7-2-4, WHITE);
+	_screen->drawLine(DownArrow.x-7+4, DownArrow.y-7-2, DownArrow.x-7+4, DownArrow.y-7-2-4, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x+7-4, DownArrow.y-7-2, DownArrow.x+7-4, DownArrow.y-7-2-4, WHITE);
 
-	_screen->drawLine(DownArrow.x-3, DownArrow.y-7-2-4, DownArrow.x+3, DownArrow.y-7-2-4, ARROW_SHADOW);
+	_screen->drawLine(DownArrow.x-7+4, DownArrow.y-7-2-4, DownArrow.x+7-4, DownArrow.y-7-2-4, ARROW_SHADOW);
 
 	// Left Arrow
 	_screen->drawLine(LeftArrow.x, LeftArrow.y, LeftArrow.x+7, LeftArrow.y-7, ARROW_SHADOW);
@@ -270,6 +291,16 @@ void Gfx::drawWeaponPower(uint8 level) {
 			color = POWER_BLUE;
 		_screen->hLine(weaponPowerArea.left, weaponPowerArea.bottom-i, weaponPowerArea.right, color);
 	}
+}
+
+void Gfx::drawInventoryItem(uint slot, uint32 iconRef, const char *name) {
+	if (slot > 6) {
+		warning("Gfx::drawInventoryItem() slot %d out of max range 0 to 6", slot);
+		return;
+	}
+
+	drawTile(iconRef, InvIcon0.left, InvIcon0.top+(slot*32));
+	// TODO: Draw Inventory Item Name
 }
 
 void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {

@@ -45,6 +45,7 @@ public:
 	void drawScreenOutline(void);
 	void drawWeapon(uint32 ref);
 	void drawWeaponPower(uint8 level);
+	void drawInventoryItem(uint slot, uint32 iconRef, const char *name);
 	void drawDirectionArrows(bool left, bool up, bool right, bool down);
 
 	// Debug Routines
