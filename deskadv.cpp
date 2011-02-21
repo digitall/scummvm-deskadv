@@ -114,10 +114,10 @@ Common::Error DeskadvEngine::run() {
 	//}
 
 	_gfx->drawScreenOutline();
-	_gfx->updateScreen();
 
 	while (!shouldQuit()) {
 		debug(1, "Main Loop Tick...");
+		_gfx->updateScreen();
 
 		while (_eventMan->pollEvent(event)) {
 			switch (event.type) {
@@ -159,7 +159,6 @@ Common::Error DeskadvEngine::run() {
 			}
 		}
 
-		_gfx->updateScreen();
 		_system->delayMillis(50);
 	}
 
