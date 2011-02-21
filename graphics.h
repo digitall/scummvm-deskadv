@@ -27,7 +27,9 @@
 #define DESKADV_GRAPHICS_H
 
 #include "graphics/surface.h"
+#include "graphics/font.h"
 #include "common/ne_exe.h"
+#include "common/rect.h"
 
 namespace Deskadv {
 
@@ -37,7 +39,7 @@ public:
 	virtual ~Gfx(void);
 
 	void updateScreen(void);
-	void drawTile(uint32 ref, uint x, uint y);
+	void drawTile(uint32 ref, uint8 x, uint8 y);
 	void loadNECursors(const char *filename);
 	void changeCursor(uint id);
 	void loadBMP(const char *filename, uint x, uint y);
@@ -45,6 +47,7 @@ public:
 	void drawScreenOutline(void);
 	void drawWeapon(uint32 ref);
 	void drawWeaponPower(uint8 level);
+	void eraseInventoryItem(uint slot);
 	void drawInventoryItem(uint slot, uint32 iconRef, const char *name);
 	void drawDirectionArrows(bool left, bool up, bool right, bool down);
 
@@ -57,7 +60,9 @@ private:
 	Graphics::Surface *_screen;
 	Common::NEResources _ne;
 	Common::Array<Common::NECursorGroup> _NECursor;
+	const Graphics::Font *_font;
 
+	void drawTileInt(uint32 ref, uint x, uint y);
 	void drawShadowFrame(const Common::Rect *rect, bool recessed, bool firstInverse, uint thickness);
 };
 

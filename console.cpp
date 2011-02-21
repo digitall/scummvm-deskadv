@@ -33,6 +33,7 @@ DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("drawTile", WRAP_METHOD(DeskadvConsole, Cmd_DrawTile));
 	DCmd_Register("drawWeapon", WRAP_METHOD(DeskadvConsole, Cmd_drawWeapon));
 	DCmd_Register("drawWeaponPower", WRAP_METHOD(DeskadvConsole, Cmd_drawWeaponPower));
+	DCmd_Register("eraseInventoryItem", WRAP_METHOD(DeskadvConsole, Cmd_eraseInventoryItem));
 	DCmd_Register("drawInventoryItem", WRAP_METHOD(DeskadvConsole, Cmd_drawInventoryItem));
 	DCmd_Register("drawDirectionArrows", WRAP_METHOD(DeskadvConsole, Cmd_drawDirectionArrows));
 	DCmd_Register("changeCursor", WRAP_METHOD(DeskadvConsole, Cmd_ChangeCursor));
@@ -56,8 +57,8 @@ bool DeskadvConsole::Cmd_DrawTile(int argc, const char **argv) {
 	}
 
 	uint32 ref = atoi(argv[1]);
-	uint x = atoi(argv[2]);
-	uint y = atoi(argv[3]);
+	uint8 x = atoi(argv[2]);
+	uint8 y = atoi(argv[3]);
 	_vm->_gfx->drawTile(ref, x, y);
 	return false;
 }
@@ -81,6 +82,18 @@ bool DeskadvConsole::Cmd_drawWeaponPower(int argc, const char **argv) {
 
 	uint8 level = atoi(argv[1]);
 	_vm->_gfx->drawWeaponPower(level);
+	return false;
+}
+
+bool DeskadvConsole::Cmd_eraseInventoryItem(int argc, const char **argv) {
+	if (argc != 2) {
+		DebugPrintf("Usage: eraseInventoryItem <slot num>\n");
+		return true;
+	}
+
+	uint slot = atoi(argv[1]);
+
+	_vm->_gfx->eraseInventoryItem(slot);
 	return false;
 }
 

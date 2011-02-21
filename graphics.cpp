@@ -31,6 +31,7 @@
 #include "common/file.h"
 
 #include "graphics/cursorman.h"
+#include "graphics/fontman.h"
 #include "graphics/imagedec.h"
 
 namespace Deskadv {
@@ -62,6 +63,9 @@ Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 	pal.close();*/
 
 	_vm->_system->getPaletteManager()->setPalette(palette, 0, sizeof(palette)/3);
+	_font = FontMan.getFontByUsage(Graphics::FontManager::kGUIFont);
+	if (!_font)
+		error("Font Not Found!");
 }
 
 Gfx::~Gfx() {
@@ -75,8 +79,8 @@ void Gfx::updateScreen(void) {
 	_vm->_system->updateScreen();
 }
 
-void Gfx::drawTile(uint32 ref, uint x, uint y) {
-	debugC(1, kDebugGraphics, "Gfx::drawTile(ref: %d, x: %d, y: %d)", ref, x, y);
+void Gfx::drawTileInt(uint32 ref, uint x, uint y) {
+	debugC(1, kDebugGraphics, "Gfx::drawTileInt(ref: %d, x: %d, y: %d)", ref, x, y);
 	byte *tile = _vm->_resource->getTileData(ref);
 	for (uint i = 0; i < 32; i++) {
 		memcpy(_screen->getBasePtr(x, y+i), tile+(i*32), 32);
@@ -144,24 +148,40 @@ void Gfx::loadBMP(const char *filename, uint x, uint y) {
 	imageFile.close();
 }
 
-static const Common::Rect tileArea(13, 31, 13+(9*32), 31+(9*32));
+const Common::Rect tileArea(13, 31, 13+(9*32), 31+(9*32));
 
-static const Common::Rect InvIcon0(314, 31, 314+32, 31+32);
-static const Common::Rect InvDesc0(314+33, 31, 314+33+147, 31+32);
+const Common::Rect InvIcon0(314, 31, 314+32, 31+32);
+const Common::Rect InvDesc0(314+33, 31, 314+33+147, 31+32);
 
 // Reference is Apex Of Arrow
-static const Common::Point UpArrow(341, 269);
-static const Common::Point DownArrow(341, 311);
-static const Common::Point LeftArrow(320, 290);
-static const Common::Point RightArrow(362, 290);
+const Common::Point UpArrow(346, 269);
+const Common::Point DownArrow(346, 311);
+const Common::Point LeftArrow(325, 290);
+const Common::Point RightArrow(367, 290);
 
-static const Common::Rect weaponArea(383, 275, 383+32, 275+32);
-static const Common::Rect weaponPowerArea(367, 275, 367+8, 275+32);
+const Common::Rect weaponArea(405, 275, 405+32, 275+32);
+const Common::Rect weaponPowerArea(405-16, 275, 405-16+8, 275+32);
+
+const Common::String strFile("File");
+const Common::String strOptions("Options");
+const Common::String strWindow("Window");
+const Common::String strHelp("Help");
+
+const Common::Rect lFile(5, 5, 5+(6*strFile.size()), 17);
+const Common::Rect lOptions(lFile.right+15, lFile.top, lFile.right+15+(6*strOptions.size()), lFile.bottom);
+const Common::Rect lWindow(lOptions.right+15, lOptions.top, lOptions.right+15+(6*strWindow.size()), lOptions.bottom);
+const Common::Rect lHelp(lWindow.right+15, lWindow.top, lWindow.right+15+(6*strHelp.size()), lWindow.bottom);
 
 void Gfx::drawScreenOutline(void) {
 	Common::Rect rect(1, 1, screenWidth-1, screenHeight-1);
 	_screen->fillRect(rect, MEDIUM_GREY);
 	_screen->hLine(0, 18, screenWidth-1, BLACK);
+
+	// Menu Bar
+	_font->drawString(_screen, strFile, lFile.left, lFile.top, lFile.width(), BLACK, Graphics::kTextAlignLeft, 0, false);
+	_font->drawString(_screen, strOptions, lOptions.left, lOptions.top, lOptions.width(), BLACK, Graphics::kTextAlignLeft, 0, false);
+	_font->drawString(_screen, strWindow, lWindow.left, lWindow.top, lWindow.width(), BLACK, Graphics::kTextAlignLeft, 0, false);
+	_font->drawString(_screen, strHelp, lHelp.left, lHelp.top, lHelp.width(), BLACK, Graphics::kTextAlignLeft, 0, false);
 
 	Common::Rect outer(4, 22, screenWidth-4, screenHeight-4);
 	drawShadowFrame(&outer, false, false, 3);
@@ -268,8 +288,22 @@ void Gfx::drawScreenOutline(void) {
 	// GREEN, HEALTH_YELLOW, HEALTH_RED, BLACK
 }
 
+void Gfx::drawTile(uint32 ref, uint8 x, uint8 y) {
+	if (x > 8) {
+		warning("drawTile(ref:%d) x:%d out of range 0 to 8 - clamping", ref, x);
+		x = 8;
+	}
+
+	if (y > 8) {
+		warning("drawTile(ref:%d) y:%d out of range 0 to 8 - clamping", ref, y);
+		y = 8;
+	}
+
+	drawTileInt(ref, tileArea.left+(x*32), tileArea.top+(y*32));
+}
+
 void Gfx::drawWeapon(uint32 ref) {
-	drawTile(ref, weaponArea.left, weaponArea.top);
+	drawTileInt(ref, weaponArea.left, weaponArea.top);
 }
 
 void Gfx::drawWeaponPower(uint8 level) {
@@ -293,14 +327,28 @@ void Gfx::drawWeaponPower(uint8 level) {
 	}
 }
 
+void Gfx::eraseInventoryItem(uint slot) {
+	Common::Rect InvIcon = InvIcon0;
+	for (uint i = 0; i < slot; i++)
+		InvIcon.translate(0, 32);
+	_screen->fillRect(InvIcon, MEDIUM_GREY);
+
+	Common::Rect InvDesc = InvDesc0;
+	for (uint i = 0; i < slot; i++)
+		InvDesc.translate(0, 32);
+	_screen->fillRect(InvDesc, MEDIUM_GREY);
+}
+
 void Gfx::drawInventoryItem(uint slot, uint32 iconRef, const char *name) {
 	if (slot > 6) {
 		warning("Gfx::drawInventoryItem() slot %d out of max range 0 to 6", slot);
 		return;
 	}
 
-	drawTile(iconRef, InvIcon0.left, InvIcon0.top+(slot*32));
-	// TODO: Draw Inventory Item Name
+	eraseInventoryItem(slot);
+	drawTileInt(iconRef, InvIcon0.left, InvIcon0.top+(slot*32));
+	const Common::String n(name);
+	_font->drawString(_screen, n, InvDesc0.left+5, InvDesc0.top+(slot*32)+12, InvDesc0.width()-10, BLACK, Graphics::kTextAlignLeft, 0, false);
 }
 
 void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {

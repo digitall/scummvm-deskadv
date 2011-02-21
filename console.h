@@ -44,6 +44,7 @@ private:
 	bool Cmd_DrawTile(int argc, const char **argv);
 	bool Cmd_drawWeapon(int argc, const char **argv);
 	bool Cmd_drawWeaponPower(int argc, const char **argv);
+	bool Cmd_eraseInventoryItem(int argc, const char **argv);
 	bool Cmd_drawInventoryItem(int argc, const char **argv);
 	bool Cmd_drawDirectionArrows(int argc, const char **argv);
 	bool Cmd_ChangeCursor(int argc, const char **argv);
