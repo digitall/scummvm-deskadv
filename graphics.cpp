@@ -352,7 +352,47 @@ void Gfx::drawInventoryItem(uint slot, uint32 iconRef, const char *name) {
 }
 
 void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {
-	// TODO: Write Code
+	uint colorLeft = MEDIUM_GREY;
+	uint colorUp = MEDIUM_GREY;
+	uint colorRight = MEDIUM_GREY;
+	uint colorDown = MEDIUM_GREY;
+
+	if (left)
+		colorLeft = GREEN;
+	if (up)
+		colorUp = GREEN;
+	if (right)
+		colorRight = GREEN;
+	if (down)
+		colorDown = GREEN;
+
+	// Up Arrow
+	for (uint i = 0; i < 7; i++)
+		_screen->drawLine(UpArrow.x-i, UpArrow.y+1+i, UpArrow.x+i, UpArrow.y+1+i, colorUp);
+	_screen->drawLine(UpArrow.x-6, UpArrow.y+1+7, UpArrow.x+6, UpArrow.y+1+7, colorUp);
+	for (uint i = 0; i < 4; i++)
+		_screen->drawLine(UpArrow.x-7+5, UpArrow.y+1+8+i, UpArrow.x+7-5, UpArrow.y+1+8+i, colorUp);
+
+	// Down Arrow
+	for (uint i = 0; i < 7; i++)
+		_screen->drawLine(DownArrow.x-i, DownArrow.y-1-i, DownArrow.x+i, DownArrow.y-1-i, colorDown);
+	_screen->drawLine(DownArrow.x-6, DownArrow.y-1-7, DownArrow.x+6, DownArrow.y-1-7, colorDown);
+	for (uint i = 0; i < 4; i++)
+		_screen->drawLine(DownArrow.x-7+5, DownArrow.y-1-8-i, DownArrow.x+7-5, DownArrow.y-1-8-i, colorDown);
+
+	// Left Arrow
+	for (uint i = 0; i < 7; i++)
+		_screen->drawLine(LeftArrow.x+1+i, LeftArrow.y-i, LeftArrow.x+1+i, LeftArrow.y+i, colorLeft);
+	_screen->drawLine(LeftArrow.x+1+7, LeftArrow.y-6, LeftArrow.x+1+7, LeftArrow.y+6, colorLeft);
+	for (uint i = 0; i < 4; i++)
+		_screen->drawLine(LeftArrow.x+1+8+i, LeftArrow.y-7+5, LeftArrow.x+1+8+i, LeftArrow.y+7-5, colorLeft);
+
+	// Right Arrow
+	for (uint i = 0; i < 7; i++)
+		_screen->drawLine(RightArrow.x-1-i, RightArrow.y-i, RightArrow.x-1-i, RightArrow.y+i, colorRight);
+	_screen->drawLine(RightArrow.x-1-7, RightArrow.y-6, RightArrow.x-1-7, RightArrow.y+6, colorRight);
+	for (uint i = 0; i < 4; i++)
+		_screen->drawLine(RightArrow.x-1-8-i, RightArrow.y-7+5, RightArrow.x-1-8-i, RightArrow.y+7-5, colorRight);
 }
 
 void Gfx::viewPalette(void) {
