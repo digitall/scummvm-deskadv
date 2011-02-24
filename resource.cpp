@@ -52,11 +52,10 @@ bool Resource::load(const char *filename, bool isYoda) {
 	if (!_file->open(filename))
 		return false;
 
-	char tag[5];
-	tag[4] = 0;
+	uint32 tag;
 
 	while(!_vm->shouldQuit()) {
-		_file->read(tag, 4);
+		tag = _file->readUint32BE();
 
 		// TODO: Missing Blocks in all resource file types
 		// unknown tag STUP, size 82944
@@ -80,17 +79,17 @@ bool Resource::load(const char *filename, bool isYoda) {
 		// Skipping unknown tag CHWP, size 464
 		// Skipping unknown tag CAUX, size 310
 
-		if (tag == Common::String("VERS")) {
+		if (tag == MKID_BE('VERS')) {
 			uint32 version = _file->readUint32LE();
 			debugC(1, kDebugResource, "Found VERS Tag - Version: %d", version);
 			if (version != 0x200)
 				warning("Unsupported Version");
-		} else if (tag == Common::String("ENDF")) {
+		} else if (tag == MKID_BE('ENDF')) {
 			break;
-		} else if (tag == Common::String("SNDS")) {
+		} else if (tag == MKID_BE('SNDS')) {
 			uint32 size = _file->readUint32LE();
 			int16 count = -(_file->readSint16LE());
-			debugC(1, kDebugResource, "Found %s tag, size %d, %d sounds", tag, size, count);
+			debugC(1, kDebugResource, "Found %s tag, size %d, %d sounds", tag2str(tag), size, count);
 			size -= 2;
 			for (int16 i = 0; i < count; i++) {
 				uint16 strsize = _file->readUint16LE();
@@ -105,9 +104,9 @@ bool Resource::load(const char *filename, bool isYoda) {
 				_soundFiles.push_back(strname);
 			}
 			assert (size == 0);
-		} else if (tag == Common::String("TNAM")) {
+		} else if (tag == MKID_BE('TNAM')) {
 			uint32 size = _file->readUint32LE();
-			debugC(1, kDebugResource, "Found %s tag, size %d", tag, size);
+			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
 			while (!_vm->shouldQuit()) {
 				Common::String name;
 				uint16 len;
@@ -122,11 +121,11 @@ bool Resource::load(const char *filename, bool isYoda) {
 					name += _file->readByte();
 				debugC(1, kDebugResource, "item id %04x (%d) is \"%s\"", id, id, name.c_str());
 			}
-		} else if (tag == Common::String("TILE")) {
+		} else if (tag == MKID_BE('TILE')) {
 			uint32 size = _file->readUint32LE();
 			_tileCount = size / 1028;
 			assert (_tileCount*1028 == size);
-			debugC(1, kDebugResource, "Found %s tag, size %d, %d tiles", tag, size, _tileCount);
+			debugC(1, kDebugResource, "Found %s tag, size %d, %d tiles", tag2str(tag), size, _tileCount);
 			_tileDataOffset = _file->pos();
 			for (uint32 i = 0; i < _tileCount; i++) {
 				uint16 unknown1 = _file->readUint16LE();
@@ -134,7 +133,7 @@ bool Resource::load(const char *filename, bool isYoda) {
 				debugC(1, kDebugResource, "Tile #%d (%d, %d)", i, unknown1, unknown2);
 				_file->seek(32 * 32, SEEK_CUR);
 			}
-		} else if (tag == Common::String("ZONE")) {
+		} else if (tag == MKID_BE('ZONE')) {
 			if (!isYoda) {
 				uint32 size = _file->readUint32LE();
 				debugC(1, kDebugResource, "size: %d", size);
@@ -154,10 +153,10 @@ bool Resource::load(const char *filename, bool isYoda) {
 				}
 
 				// IZON
-				_file->read(tag, 4);
+				tag = _file->readUint32BE();
 				uint32 size = _file->readUint32LE();
-				assert (tag == Common::String("IZON"));
-				debugC(1, kDebugResource, "%s: size: %d", tag, size);
+				assert (tag == MKID_BE('IZON'));
+				debugC(1, kDebugResource, "%s: size: %d", tag2str(tag), size);
 				uint16 width = _file->readUint16LE();
 				uint16 height = _file->readUint16LE();
 				uint32 izon_unknown1 = _file->readUint32LE();
@@ -198,8 +197,8 @@ bool Resource::load(const char *filename, bool isYoda) {
 				}
 
 				// IZAX
-				_file->read(tag, 4);
-				assert (tag == Common::String("IZAX"));
+				tag = _file->readUint32BE();
+				assert (tag == MKID_BE('IZAX'));
 				uint32 ignored1 = _file->readUint32LE();
 				uint16 ignored2 = _file->readUint16LE();
 				debugC(1, kDebugResource, "IZAX: useless unknowns %08x, %04x", ignored1, ignored2);
@@ -239,8 +238,8 @@ bool Resource::load(const char *filename, bool isYoda) {
 				}
 
 				// IZX2
-				_file->read(tag, 4);
-				assert (tag == Common::String("IZX2"));
+				tag = _file->readUint32BE();
+				assert (tag == MKID_BE('IZX2'));
 				uint32 ignored3 = _file->readUint32LE();
 				uint16 izx2Count = _file->readUint16LE();
 				debugC(1, kDebugResource, " IZX2: unknown %08x, count %d", ignored3, izx2Count);
@@ -251,8 +250,8 @@ bool Resource::load(const char *filename, bool isYoda) {
 				}
 
 				// IZX3
-				_file->read(tag, 4);
-				assert (tag == Common::String("IZX3"));
+				tag = _file->readUint32BE();
+				assert (tag == MKID_BE('IZX3'));
 				uint32 ignored4 = _file->readUint32LE();
 				uint16 izx3Count = _file->readUint16LE();
 				debugC(1, kDebugResource, " IZX3: unknown %08x, count %d", ignored4, izx3Count);
@@ -263,8 +262,8 @@ bool Resource::load(const char *filename, bool isYoda) {
 				}
 
 				// IZX4
-				_file->read(tag, 4);
-				assert (tag == Common::String("IZX4"));
+				tag = _file->readUint32BE();
+				assert (tag == MKID_BE('IZX4'));
 				uint32 ignored5 = _file->readUint32LE();
 				uint16 izx4Count = _file->readUint16LE();
 				debugC(1, kDebugResource, " IZX4: unknown %08x, unknown %d", ignored5, izx4Count);
@@ -273,8 +272,8 @@ bool Resource::load(const char *filename, bool isYoda) {
 				uint16 iactCount = _file->readUint16LE();
 				debugC(1, kDebugResource, " IACT count: %d", iactCount);
 				for (uint16 j = 0; j < iactCount; j++) {
-					_file->read(tag, 4);
-					assert (tag == Common::String("IACT"));
+					tag = _file->readUint32BE();
+					assert (tag == MKID_BE('IACT'));
 					uint32 ignored6 = _file->readUint32LE();
 					uint16 iactItemCount1 = _file->readUint16LE();
 					debugC(1, kDebugResource, "  IACT: unknown %08x, count1 %d", ignored6, iactItemCount1);
@@ -311,7 +310,7 @@ bool Resource::load(const char *filename, bool isYoda) {
 			}
 		} else {
 			uint32 size = _file->readUint32LE();
-			debugC(1, kDebugResource, "Skipping unknown tag %s, size %d", tag, size);
+			debugC(1, kDebugResource, "Skipping unknown tag %s, size %d", tag2str(tag), size);
 			for (uint32 i = 0; i < size; i++)
 				_file->readByte();
 		}
