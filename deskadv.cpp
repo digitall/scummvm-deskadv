@@ -35,6 +35,7 @@
 #include "graphics/pixelformat.h"
 
 #include "engines/util.h"
+#include "engines/advancedDetector.h"
 
 #include "deskadv/console.h"
 #include "deskadv/deskadv.h"
@@ -86,19 +87,24 @@ Common::Error DeskadvEngine::run() {
 	_console = new DeskadvConsole(this);
 	_resource = new Resource(this);
 
+	Common::String resourceFilename;
 	switch (getGameType()) {
 	case GType_Indy:
-		if (!_resource->load("desktop.daw", false))
-			error("Loading from DAW Resource File failed!");
+		resourceFilename = "desktop.daw";
 		break;
 	case GType_Yoda:
-		if (!_resource->load("yodesk.dta", true))
-			error("Loading from DTA Resource File Failed!");
+		if (getFeatures() & ADGF_DEMO)
+			resourceFilename = "yodademo.dta";
+		else
+			resourceFilename = "yodesk.dta";
 		break;
 	default:
 		error("Unknown Game Type for Resource File...");
 		break;
 	}
+	debug(1, "resourceFilename: \"%s\"", resourceFilename.c_str());
+	if (!_resource->load(resourceFilename.c_str(), false))
+		error("Loading from Resource File failed!");
 
 	// Load Mouse Cursors
 	if (getGameType() == GType_Indy)
