@@ -68,13 +68,11 @@ bool Resource::load(const char *filename, bool isYoda) {
 		// unknown tag HTSP, size 12138
 		// unknown tag ACTN, size 370217
 		//
-		// unknown tag PUZ2, size 36744
 		// unknown tag CHAR, size 2108
 		// unknown tag CHWP, size 164
 		// unknown tag CAUX, size 110
 
 		// TODO: Missing Blocks in Yoda DTA resource file
-		// Skipping unknown tag PUZ2, size 38834
 		// Skipping unknown tag CHAR, size 6470
 		// Skipping unknown tag CHWP, size 464
 		// Skipping unknown tag CAUX, size 310
@@ -104,22 +102,88 @@ bool Resource::load(const char *filename, bool isYoda) {
 				_soundFiles.push_back(strname);
 			}
 			assert (size == 0);
-		} else if (tag == MKID_BE('TNAM')) {
+		} else if (tag == MKID_BE('ANAM')) {
 			uint32 size = _file->readUint32LE();
 			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
 			while (!_vm->shouldQuit()) {
+				uint16 zoneid = _file->readUint16LE();
+				if (zoneid == 0xffff)
+					break;
+				debugC(1, kDebugResource, "entry for zone %04x (%d)", zoneid, zoneid);
+				while (!_vm->shouldQuit()) {
+					uint16 id = _file->readUint16LE();
+					if (id == 0xffff)
+						break;
+					Common::String name;
+					uint16 len;
+					if (isYoda)
+						len = 24;
+					else
+						len = 16;
+					for (uint16 i = 0; i < len; i++)
+						name += _file->readByte();
+					//name = name.strip('\00')
+					debugC(1, kDebugResource, "entry id %04x (%d) is \"%s\"", id, id, name.c_str());
+				}
+			}
+		} else if (tag == MKID_BE('PNAM')) {
+			uint32 size = _file->readUint32LE();
+			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
+			uint16 count = _file->readUint16LE();
+			for (uint i = 0; i < count; i++) {
+				Common::String name;
+				for (uint16 j = 0; j < 16; j++)
+					name += _file->readByte();
+				//name = name.strip('\00')
+				debugC(1, kDebugResource, "entry %04x (%d) is \"%s\"", i, i, name.c_str());
+			}
+		} else if (tag == MKID_BE('TNAM') || tag == MKID_BE('ZNAM')) {
+			uint32 size = _file->readUint32LE();
+			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
+			while (!_vm->shouldQuit()) {
+				uint16 id = _file->readUint16LE();
+				if (id == 0xffff)
+					break;
 				Common::String name;
 				uint16 len;
-				uint16 id = _file->readUint16LE();
 				if (isYoda)
 					len = 24;
 				else
 					len = 16;
-				if (id == 0xffff)
-					break;
 				for (uint16 i = 0; i < len; i++)
 					name += _file->readByte();
-				debugC(1, kDebugResource, "item id %04x (%d) is \"%s\"", id, id, name.c_str());
+				//name = name.strip('\00')
+				debugC(1, kDebugResource, "entry id %04x (%d) is \"%s\"", id, id, name.c_str());
+			}
+		} else if (tag == MKID_BE('PUZ2')) {
+			uint32 size = _file->readUint32LE();
+			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
+			while (!_vm->shouldQuit()) {
+				uint16 puzid = _file->readUint16LE();
+				if (puzid == 0xffff)
+					break;
+				tag = _file->readUint32BE();
+				assert (tag == MKID_BE('IPUZ'));
+				uint32 ipuzSize = _file->readUint32LE();
+				uint32 u1 = _file->readUint32LE();
+				uint32 u2 = _file->readUint32LE();
+				uint32 u3 = 0;
+				if (isYoda)
+					u3 = _file->readUint32LE();
+				uint16 u4 = _file->readUint16LE();
+				debugC(1, kDebugResource, "puz id %d (0x%04x) size %d, unknowns %08x, %08x, %08x, %04x", puzid, puzid, ipuzSize, u1, u2, u3, u4);
+				for (uint i = 0; i < 5; i++) {
+					uint16 strlen = _file->readUint16LE();
+					Common::String str;
+					for (uint16 j = 0; j < strlen; j++)
+						str += _file->readByte();
+					debugC(1, kDebugResource, " IPUZ string%d: \"%s\"", i, str.c_str());
+				}
+				uint16 u5 = _file->readUint16LE();
+				uint16 u6 = 0;
+				if (isYoda)
+					u6 = _file->readUint16LE();
+				debugC(1, kDebugResource, " IPUZ unknowns %04x, %04x", u5, u6);
 			}
 		} else if (tag == MKID_BE('TILE')) {
 			uint32 size = _file->readUint32LE();
