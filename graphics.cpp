@@ -36,7 +36,7 @@
 
 namespace Deskadv {
 
-static const uint screenWidth = 524;
+static const uint screenWidth = 532;
 static const uint screenHeight = 332;
 
 Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
@@ -151,16 +151,18 @@ void Gfx::loadBMP(const char *filename, uint x, uint y) {
 const Common::Rect tileArea(13, 31, 13+(9*32), 31+(9*32));
 
 const Common::Rect InvIcon0(314, 31, 314+32, 31+32);
-const Common::Rect InvDesc0(314+33, 31, 314+33+147, 31+32);
+const Common::Rect InvDesc0(314+35, 31, 314+35+147, 31+32);
 
 // Reference is Apex Of Arrow
-const Common::Point UpArrow(346, 269);
-const Common::Point DownArrow(346, 311);
-const Common::Point LeftArrow(325, 290);
-const Common::Point RightArrow(367, 290);
+const Common::Point UpArrow(347, 274);
+const Common::Point DownArrow(347, 316);
+const Common::Point LeftArrow(326, 295);
+const Common::Point RightArrow(368, 295);
 
-const Common::Rect weaponArea(405, 275, 405+32, 275+32);
-const Common::Rect weaponPowerArea(405-16, 275, 405-16+8, 275+32);
+const Common::Rect weaponArea(405, 280, 405+32, 280+32);
+const Common::Rect weaponPowerArea(405-16, 280, 405-16+8, 280+32);
+
+const Common::Point health(480, 280+16);
 
 const Common::String strFile("File");
 const Common::String strOptions("Options");
@@ -190,25 +192,53 @@ void Gfx::drawScreenOutline(void) {
 	drawShadowFrame(&tileArea, true, false, 3);
 
 	// Inventory
-	static const Common::Rect InvOuter(314, 31, 494, 31+(7*32));
-	drawShadowFrame(&InvOuter, true, true, 3);
+	static const Common::Rect InvOuter(313, 30, 497, 268);
+	drawShadowFrame(&InvOuter, true, false, 2);
 
 	Common::Rect InvIcon = InvIcon0;
 	for (uint i = 0; i < 7; i++) {
-		drawShadowFrame(&InvIcon, true, false, 1);
-		InvIcon.translate(0, 32);
+		drawShadowFrame(&InvIcon, false, false, 1);
+		InvIcon.translate(0, 34);
 	}
 
 	Common::Rect InvDesc = InvDesc0;
 	for (uint i = 0; i < 7; i++) {
-		drawShadowFrame(&InvDesc, true, false, 1);
-		InvDesc.translate(0, 32);
+		drawShadowFrame(&InvDesc, false, false, 1);
+		InvDesc.translate(0, 34);
 	}
 
 	// Inventory Scroll Bar
-	static const Common::Rect InvScroll(503, 31, 503+12, 31+(7*32));
-	drawShadowFrame(&InvScroll, true, false, 3);
+	static const Common::Rect InvScrollOuter(504, 30, 504+16, 268);
+	drawShadowFrame(&InvScrollOuter, true, false, 2);
+
+	const Common::Rect InvScroll(504, 30+13, 504+16, 268-13);
 	_screen->fillRect(InvScroll, LIGHT_GREY);
+
+	const Common::Rect InvScrUp(InvScrollOuter.left+2, InvScrollOuter.top+2, InvScrollOuter.right-2, InvScrollOuter.top+2+9);
+	_screen->fillRect(InvScrUp, MEDIUM_GREY);
+	drawShadowFrame(&InvScrUp, false, false, 1);
+	_screen->hLine(InvScrUp.left-2, InvScrUp.bottom+1, InvScrUp.right+1, BLACK);
+	_screen->vLine(InvScrUp.right+1, InvScrUp.top-2, InvScrUp.bottom, BLACK);
+	for (uint i = 0; i < 3; i++)
+		_screen->hLine(InvScrUp.left+5-i, InvScrUp.top+3+i, InvScrUp.left+5+i, BLACK);
+
+	const Common::Rect InvScrDown(InvScrollOuter.left+2, InvScrollOuter.bottom-2-9, InvScrollOuter.right-2, InvScrollOuter.bottom-2);
+	_screen->fillRect(InvScrDown, MEDIUM_GREY);
+	drawShadowFrame(&InvScrDown, false, false, 1);
+	_screen->hLine(InvScrDown.left-2, InvScrDown.bottom+1, InvScrDown.right+1, BLACK);
+	_screen->vLine(InvScrDown.right+1, InvScrDown.top-2, InvScrDown.bottom, BLACK);
+	for (uint i = 0; i < 3; i++)
+		_screen->hLine(InvScrDown.left+5-i, InvScrDown.bottom-4-i, InvScrDown.left+5+i, BLACK);
+
+	Common::Rect InvScrThumb(InvScrollOuter.left, InvScrollOuter.top-2+40, InvScrollOuter.right, InvScrollOuter.top+1+40+9);
+	_screen->fillRect(InvScrThumb, MEDIUM_GREY);
+	InvScrThumb.top += 2;
+	InvScrThumb.bottom -= 1;
+	InvScrThumb.left += 2;
+	InvScrThumb.right -= 2;
+	drawShadowFrame(&InvScrThumb, false, false, 1);
+	_screen->hLine(InvScrThumb.left-2, InvScrThumb.bottom+1, InvScrThumb.right+1, BLACK);
+	_screen->vLine(InvScrThumb.right+1, InvScrThumb.top-2, InvScrThumb.bottom, BLACK);
 
 	// Direction Arrows Outline
 	// Up Arrow
@@ -286,6 +316,14 @@ void Gfx::drawScreenOutline(void) {
 	// Draw Pie shaped polygon.. or wedged shaped and mask over with grey outer
 	// at end. Just use arbitary line drawing from centre to perimeter...
 	// GREEN, HEALTH_YELLOW, HEALTH_RED, BLACK
+
+	Common::Rect healthBounding(health.x-16, health.y-16, health.x+16, health.y+16);
+	_screen->fillRect(healthBounding, GREEN);
+
+	_screen->hLine(health.x-5, health.y, health.x+5, BLACK);
+	_screen->vLine(health.x, health.y-5, health.y+5, BLACK);
+
+
 }
 
 void Gfx::drawTile(uint32 ref, uint8 x, uint8 y) {
@@ -330,12 +368,12 @@ void Gfx::drawWeaponPower(uint8 level) {
 void Gfx::eraseInventoryItem(uint slot) {
 	Common::Rect InvIcon = InvIcon0;
 	for (uint i = 0; i < slot; i++)
-		InvIcon.translate(0, 32);
+		InvIcon.translate(0, 34);
 	_screen->fillRect(InvIcon, MEDIUM_GREY);
 
 	Common::Rect InvDesc = InvDesc0;
 	for (uint i = 0; i < slot; i++)
-		InvDesc.translate(0, 32);
+		InvDesc.translate(0, 34);
 	_screen->fillRect(InvDesc, MEDIUM_GREY);
 }
 
@@ -393,6 +431,10 @@ void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {
 	_screen->drawLine(RightArrow.x-1-7, RightArrow.y-6, RightArrow.x-1-7, RightArrow.y+6, colorRight);
 	for (uint i = 0; i < 4; i++)
 		_screen->drawLine(RightArrow.x-1-8-i, RightArrow.y-7+5, RightArrow.x-1-8-i, RightArrow.y+7-5, colorRight);
+}
+
+void Gfx::drawHealthMeter(uint level) {
+	// TODO
 }
 
 void Gfx::viewPalette(void) {

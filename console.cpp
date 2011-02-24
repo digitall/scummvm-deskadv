@@ -36,6 +36,7 @@ DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("eraseInventoryItem", WRAP_METHOD(DeskadvConsole, Cmd_eraseInventoryItem));
 	DCmd_Register("drawInventoryItem", WRAP_METHOD(DeskadvConsole, Cmd_drawInventoryItem));
 	DCmd_Register("drawDirectionArrows", WRAP_METHOD(DeskadvConsole, Cmd_drawDirectionArrows));
+	DCmd_Register("drawHealthMeter", WRAP_METHOD(DeskadvConsole, Cmd_drawHealthMeter));
 	DCmd_Register("changeCursor", WRAP_METHOD(DeskadvConsole, Cmd_ChangeCursor));
 	DCmd_Register("listSounds", WRAP_METHOD(DeskadvConsole, Cmd_ListSounds));
 	DCmd_Register("playSound", WRAP_METHOD(DeskadvConsole, Cmd_PlaySound));
@@ -123,6 +124,18 @@ bool DeskadvConsole::Cmd_drawDirectionArrows(int argc, const char **argv) {
 	uint8 down = atoi(argv[4]);
 
 	_vm->_gfx->drawDirectionArrows(left, up, right, down);
+	return false;
+}
+
+bool DeskadvConsole::Cmd_drawHealthMeter(int argc, const char **argv) {
+	if (argc != 2) {
+		DebugPrintf("Usage: drawHealthMeter <level>\n");
+		return true;
+	}
+
+	uint level = atoi(argv[1]);
+
+	_vm->_gfx->drawHealthMeter(level);
 	return false;
 }
 

@@ -47,6 +47,7 @@ private:
 	bool Cmd_eraseInventoryItem(int argc, const char **argv);
 	bool Cmd_drawInventoryItem(int argc, const char **argv);
 	bool Cmd_drawDirectionArrows(int argc, const char **argv);
+	bool Cmd_drawHealthMeter(int argc, const char **argv);
 	bool Cmd_ChangeCursor(int argc, const char **argv);
 	bool Cmd_ListSounds(int argc, const char **argv);
 	bool Cmd_PlaySound(int argc, const char **argv);

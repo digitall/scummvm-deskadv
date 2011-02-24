@@ -50,6 +50,7 @@ public:
 	void eraseInventoryItem(uint slot);
 	void drawInventoryItem(uint slot, uint32 iconRef, const char *name);
 	void drawDirectionArrows(bool left, bool up, bool right, bool down);
+	void drawHealthMeter(uint level);
 
 	// Debug Routines
 	void viewPalette(void);
