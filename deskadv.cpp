@@ -103,7 +103,7 @@ Common::Error DeskadvEngine::run() {
 		break;
 	}
 	debug(1, "resourceFilename: \"%s\"", resourceFilename.c_str());
-	if (!_resource->load(resourceFilename.c_str(), false))
+	if (!_resource->load(resourceFilename.c_str(), getGameType() == GType_Yoda))
 		error("Loading from Resource File failed!");
 
 	// Load Mouse Cursors
