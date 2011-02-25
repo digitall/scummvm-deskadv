@@ -351,13 +351,11 @@ void Gfx::drawScreenOutline(void) {
 	// at end. Just use arbitary line drawing from centre to perimeter...
 	// GREEN, HEALTH_YELLOW, HEALTH_RED, BLACK
 
-	Common::Rect healthBounding(health.x-16, health.y-16, health.x+16, health.y+16);
-	_screen->fillRect(healthBounding, GREEN);
-
 	_screen->hLine(health.x-5, health.y, health.x+5, BLACK);
 	_screen->vLine(health.x, health.y-5, health.y+5, BLACK);
 
-
+	drawFilledCircle(_screen, health, 15+2, DARK_GREY);
+	drawFilledCircle(_screen, health, 15, GREEN);
 }
 
 void Gfx::drawTile(uint32 ref, uint8 x, uint8 y) {
@@ -510,6 +508,74 @@ void Gfx::drawShadowFrame(const Common::Rect *rect, bool recessed, bool firstInv
 
 		// Bottom Border
 		_screen->hLine(rect->left-1-i, rect->bottom-1+1+i, rect->right-1+1+i, (firstInverse && i == 0) ? TLColor : BRColor);
+	}
+}
+
+void Gfx::drawFrameCircle(Graphics::Surface *target, const Common::Point center, uint radius, uint color) {
+	#define setPixel(x, y, color) *((byte *)target->getBasePtr(x, y)) = color;
+
+	// Implementation of "midpoint circle algorithm" also known as "Bresenham's circle algorithm".
+	int f = 1 - radius;
+	int ddF_x = 1;
+	int ddF_y = -2 * radius;
+	int x = 0;
+	int y = radius;
+
+	setPixel(center.x, center.y + radius, color);
+	setPixel(center.x, center.y - radius, color);
+	setPixel(center.x + radius, center.y, color);
+	setPixel(center.x - radius, center.y, color);
+
+	while (x < y) {
+		// ddF_x == 2 * x + 1;
+		// ddF_y == -2 * y;
+		// f == x*x + y*y - radius*radius + 2*x - y + 1;
+		if (f >= 0) {
+			y--;
+			ddF_y += 2;
+			f += ddF_y;
+		}
+		x++;
+		ddF_x += 2;
+		f += ddF_x;
+		setPixel(center.x + x, center.y + y, color);
+		setPixel(center.x - x, center.y + y, color);
+		setPixel(center.x + x, center.y - y, color);
+		setPixel(center.x - x, center.y - y, color);
+		setPixel(center.x + y, center.y + x, color);
+		setPixel(center.x - y, center.y + x, color);
+		setPixel(center.x + y, center.y - x, color);
+		setPixel(center.x - y, center.y - x, color);
+	}
+}
+
+void Gfx::drawFilledCircle(Graphics::Surface *target, const Common::Point center, uint radius, uint color) {
+	// Filled Implementation of "midpoint circle algorithm" also known as "Bresenham's circle algorithm".
+	int f = 1 - radius;
+	int ddF_x = 1;
+	int ddF_y = -2 * radius;
+	int x = 0;
+	int y = radius;
+
+	target->vLine(center.x, center.y + radius, center.y - radius, color);
+	target->hLine(center.x + radius, center.y, center.x - radius, color);
+
+	while (x < y) {
+		// ddF_x == 2 * x + 1;
+		// ddF_y == -2 * y;
+		// f == x*x + y*y - radius*radius + 2*x - y + 1;
+		if (f >= 0) {
+			y--;
+			ddF_y += 2;
+			f += ddF_y;
+		}
+		x++;
+		ddF_x += 2;
+		f += ddF_x;
+		target->hLine(center.x + x, center.y + y, center.x - x, color);
+		target->hLine(center.x + x, center.y - y, center.x - x, color);
+		target->hLine(center.x + y, center.y + x, center.x - y, color);
+		target->hLine(center.x + y, center.y - x, center.x - y, color);
 	}
 }
 
