@@ -111,6 +111,7 @@ Common::Error DeskadvEngine::run() {
 		_gfx->loadNECursors("deskadv.exe");
 	if (getGameType() == GType_Yoda)
 		warning("TODO: PE Loader needed for Yoda Stories Executable");
+	_gfx->setDefaultCursor();
 	CursorMan.showMouse(true);
 
 	// TODO: Current BMPDecoder does not support this bitmap variant.

@@ -85,6 +85,7 @@ void Gfx::drawTileInt(uint32 ref, uint x, uint y) {
 	for (uint i = 0; i < 32; i++) {
 		memcpy(_screen->getBasePtr(x, y+i), tile+(i*32), 32);
 	}
+	delete[] tile;
 }
 
 void Gfx::loadNECursors(const char *filename) {
@@ -93,6 +94,39 @@ void Gfx::loadNECursors(const char *filename) {
 	debugC(1, kDebugGraphics, "Loading NE Cursors: Found %d", _NECursor.size());
 	for (uint i = 0; i < _NECursor.size(); i++)
 		debugC(1, kDebugGraphics, "\tFound %d Cursors of Resource id: %s", _NECursor[i].cursors.size(), _NECursor[i].id.toString().c_str());
+}
+
+void Gfx::setDefaultCursor() {
+	static const byte s_bwPalette[] = {
+		0x00, 0x00, 0x00,	// Black
+		0xFF, 0xFF, 0xFF	// White
+	};
+
+	static const byte defaultCursor[] = {
+		1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+		1, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0,
+		1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0,
+		1, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0,
+		1, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0,
+		1, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0,
+		1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0,
+		1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0,
+		1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1,
+		1, 2, 2, 2, 1, 2, 2, 1, 0, 0, 0, 0,
+		1, 2, 2, 1, 1, 2, 2, 1, 0, 0, 0, 0,
+		1, 2, 1, 0, 1, 1, 2, 2, 1, 0, 0, 0,
+		1, 1, 0, 0, 0, 1, 2, 2, 1, 0, 0, 0,
+		1, 0, 0, 0, 0, 0, 1, 2, 2, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 1, 2, 2, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 1, 0,
+		0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 1, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0
+	};
+
+	CursorMan.replaceCursor(defaultCursor, 12, 20, 0, 0, 0);
+	CursorMan.replaceCursorPalette(s_bwPalette, 1, 2);
 }
 
 void Gfx::changeCursor(uint id) {
@@ -124,8 +158,8 @@ void Gfx::changeCursor(uint id) {
 	// 18 -    Win3.1 Horizontal   Resize (0x790a)
 	// 19 -    Win3.1 Move         Window (0x790b)
 	// 20 -    Win3.1   Pointer with Move (0x790c)
-	CursorMan.replaceCursorPalette(cur->getPalette(), 0, 256);
 	CursorMan.replaceCursor(cur->getSurface(), cur->getWidth(), cur->getHeight(), cur->getHotspotX(), cur->getHotspotY(), 0);
+	CursorMan.replaceCursorPalette(cur->getPalette(), 0, 256);
 }
 
 void Gfx::loadBMP(const char *filename, uint x, uint y) {
