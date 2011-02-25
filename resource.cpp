@@ -37,6 +37,14 @@ Resource::Resource(DeskadvEngine *vm) : _vm(vm) {
 }
 
 Resource::~Resource() {
+	while(!_zones.empty()) {
+		ZONE *temp = &_zones.back();
+		delete[] temp->tiles[0];
+		delete[] temp->tiles[1];
+		delete[] temp->tiles[2];
+		_zones.pop_back();
+	}
+
 	if (_file)
 		_file->close();
 	delete _file;
@@ -202,9 +210,9 @@ bool Resource::load(const char *filename, bool isYoda) {
 				uint32 size = _file->readUint32LE();
 				debugC(1, kDebugResource, "size: %d", size);
 			}
-			uint16 zoneCount = _file->readUint16LE();
-			debugC(1, kDebugResource, "ZONE tag: %d zones", zoneCount);
-			for (uint16 i = 0; i < zoneCount; i++) {
+			_zoneCount = _file->readUint16LE();
+			debugC(1, kDebugResource, "ZONE tag: %d zones", _zoneCount);
+			for (uint16 i = 0; i < _zoneCount; i++) {
 				debugCN(1, kDebugResource, "\n");
 
 				// Zone Header
@@ -232,16 +240,27 @@ bool Resource::load(const char *filename, bool isYoda) {
 				}
 				debugC(1, kDebugResource, " %dx%d entries, unknowns %08x, %04x, %04x", width, height, izon_unknown1, izon_unknown2, izon_unknown3);
 
+				ZONE z;
+				z.width = width;
+				z.height = height;
+				z.tiles[0] = new uint16[width*height];
+				z.tiles[1] = new uint16[width*height];
+				z.tiles[2] = new uint16[width*height];
+
 				// tiles
-				for (uint16 j = 0; j < width; j++) {
-					for (uint16 k = 0; k < height; k++) {
+				for (uint16 j = 0; j < height; j++) {
+					for (uint16 k = 0; k < width; k++) {
 						uint16 u1 = _file->readUint16LE();
 						uint16 u2 = _file->readUint16LE();
 						uint16 u3 = _file->readUint16LE();
 						debugC(1, kDebugResource, "(tile: %04x, %04x, %04x)", u1, u2, u3);
+						z.tiles[0][(j*width)+k] = u1;
+						z.tiles[1][(j*width)+k] = u2;
+						z.tiles[2][(j*width)+k] = u3;
 					}
 					debugCN(1, kDebugResource, "\n");
 				}
+				_zones.push_back(z);
 
 				if (!isYoda)
 					continue;
@@ -383,7 +402,21 @@ bool Resource::load(const char *filename, bool isYoda) {
 	return true;
 }
 
+ZONE *Resource::getZone(uint num) {
+	if (num >= _zones.size()) {
+		warning("Resource::getZone(%d) ref is out of range", num);
+		return 0;
+	}
+
+	return &_zones[num];
+}
+
 byte *Resource::getTileData(uint32 ref) {
+	if (ref >= _tileCount) {
+		warning("Resource::getTileData(%d) ref is out of range", ref);
+		return 0;
+	}
+
 	byte *data = new byte[32 * 32];
 	_file->seek(_tileDataOffset + (ref * ((32 * 32) + 4)) + 4, SEEK_SET);
 	_file->read(data, 32 * 32);
@@ -392,7 +425,7 @@ byte *Resource::getTileData(uint32 ref) {
 
 const char *Resource::getSoundFilename(uint16 ref) {
 	if (ref >= _soundFiles.size()) {
-		warning("Sound::getSoundFilename(%d) ref is out of range", ref);
+		warning("Resource::getSoundFilename(%d) ref is out of range", ref);
 		return 0;
 	}
 

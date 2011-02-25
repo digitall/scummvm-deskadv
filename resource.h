@@ -32,6 +32,12 @@ namespace Deskadv {
 
 class DeskadvEngine;
 
+typedef struct zone {
+	uint16 width;
+	uint16 height;
+	uint16 *tiles[3];
+} ZONE;
+
 class Resource {
 public:
 	Resource(DeskadvEngine *vm);
@@ -42,6 +48,9 @@ public:
 	uint32 getTileCount(void) { return _tileCount; }
 	byte *getTileData(uint32 ref);
 
+	uint16 getZoneCount(void) { return _zoneCount; }
+	ZONE *getZone(uint num);
+
 	uint16 getSoundCount(void) { return _soundFiles.size(); }
 	const char *getSoundFilename(uint16 ref);
 
@@ -49,8 +58,13 @@ private:
 	DeskadvEngine *_vm;
 
 	Common::File *_file;
+
 	uint32 _tileCount;
 	uint32 _tileDataOffset;
+
+	uint16 _zoneCount;
+	Common::Array<ZONE> _zones;
+
 	Common::Array<Common::String> _soundFiles;
 };
 

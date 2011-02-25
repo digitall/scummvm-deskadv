@@ -41,6 +41,7 @@ DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("listSounds", WRAP_METHOD(DeskadvConsole, Cmd_ListSounds));
 	DCmd_Register("playSound", WRAP_METHOD(DeskadvConsole, Cmd_PlaySound));
 	DCmd_Register("stopSound", WRAP_METHOD(DeskadvConsole, Cmd_StopSound));
+	DCmd_Register("drawZone", WRAP_METHOD(DeskadvConsole, Cmd_DrawZone));
 }
 
 DeskadvConsole::~DeskadvConsole() {
@@ -188,6 +189,41 @@ bool DeskadvConsole::Cmd_StopSound(int argc, const char **argv) {
 	_vm->_snd->stopMID();
 
 	return true;
+}
+
+bool DeskadvConsole::Cmd_DrawZone(int argc, const char **argv) {
+	if (argc != 3) {
+		DebugPrintf("drawZone <num = 0 to %d> <layer = 0 to 2>\n", _vm->_resource->getZoneCount());
+		return true;
+	}
+
+	uint16 num = atoi(argv[1]);
+	uint16 layer = atoi(argv[2]);
+
+	if (num >= _vm->_resource->getZoneCount()) {
+		DebugPrintf("zone num must be in range 0 to %d\n", _vm->_resource->getZoneCount());
+		return true;
+	}
+
+	if (layer > 2) {
+		DebugPrintf("layer must be 0, 1 or 2\n");
+		return true;
+	}
+
+	// TODO: Add Support to scroll Zone.
+	// TODO: Are three layers drawn over top of each other with 0(?) transparent...
+	if (num < _vm->_resource->getZoneCount()) {
+		ZONE *z = _vm->_resource->getZone(num);
+		for (uint y = 0; y < 9; y++) {
+			for (uint x = 0; x < 9; x++) {
+				uint16 tileRef = z->tiles[layer][(y*z->width)+x];
+				if (tileRef != 0xFFFF)
+					_vm->_gfx->drawTile(tileRef, x, y);
+			}
+		}
+	}
+
+	return false;
 }
 
 } // End of namespace Deskadv

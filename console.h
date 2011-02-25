@@ -52,6 +52,7 @@ private:
 	bool Cmd_ListSounds(int argc, const char **argv);
 	bool Cmd_PlaySound(int argc, const char **argv);
 	bool Cmd_StopSound(int argc, const char **argv);
+	bool Cmd_DrawZone(int argc, const char **argv);
 };
 
 } // End of namespace Deskadv
