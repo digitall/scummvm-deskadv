@@ -79,11 +79,16 @@ void Gfx::updateScreen(void) {
 	_vm->_system->updateScreen();
 }
 
-void Gfx::drawTileInt(uint32 ref, uint x, uint y) {
+void Gfx::drawTileInt(uint32 ref, uint x, uint y, byte transparentColor) {
 	debugC(1, kDebugGraphics, "Gfx::drawTileInt(ref: %d, x: %d, y: %d)", ref, x, y);
 	byte *tile = _vm->_resource->getTileData(ref);
-	for (uint i = 0; i < 32; i++) {
-		memcpy(_screen->getBasePtr(x, y+i), tile+(i*32), 32);
+	for (uint dy = 0; dy < 32; dy++) {
+		for (uint dx = 0; dx < 32; dx++) {
+			byte pixel = *(tile+(dy*32)+dx);
+			debugC(1, kDebugGraphics, "Gfx::drawTileInt x:%d y:%d pixel:%d", x, y, pixel);
+			if (pixel != transparentColor)
+				*((byte *)_screen->getBasePtr(x+dx, y+dy)) = pixel;
+		}
 	}
 	delete[] tile;
 }
@@ -369,11 +374,11 @@ void Gfx::drawTile(uint32 ref, uint8 x, uint8 y) {
 		y = 8;
 	}
 
-	drawTileInt(ref, tileArea.left+(x*32), tileArea.top+(y*32));
+	drawTileInt(ref, tileArea.left+(x*32), tileArea.top+(y*32), TRANSPARENT);
 }
 
 void Gfx::drawWeapon(uint32 ref) {
-	drawTileInt(ref, weaponArea.left, weaponArea.top);
+	drawTileInt(ref, weaponArea.left, weaponArea.top, TRANSPARENT);
 }
 
 void Gfx::drawWeaponPower(uint8 level) {
@@ -416,7 +421,7 @@ void Gfx::drawInventoryItem(uint slot, uint32 iconRef, const char *name) {
 	}
 
 	eraseInventoryItem(slot);
-	drawTileInt(iconRef, InvIcon0.left, InvIcon0.top+(slot*32));
+	drawTileInt(iconRef, InvIcon0.left, InvIcon0.top+(slot*32), TRANSPARENT);
 	const Common::String n(name);
 	_font->drawString(_screen, n, InvDesc0.left+5, InvDesc0.top+(slot*32)+12, InvDesc0.width()-10, BLACK, Graphics::kTextAlignLeft, 0, false);
 }

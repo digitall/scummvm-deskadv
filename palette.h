@@ -53,6 +53,7 @@ namespace Deskadv {
 // 0 - black and 255 - white are also in W3.1 default palette, but are set here
 // to the same values so not critical if they are set or skipped.
 
+const static uint   TRANSPARENT =   0;
 const static uint         BLACK =   0;
 const static uint    LIGHT_GREY =   7;
 const static uint  ARROW_SHADOW =  24;

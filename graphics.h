@@ -64,7 +64,7 @@ private:
 	Common::Array<Common::NECursorGroup> _NECursor;
 	const Graphics::Font *_font;
 
-	void drawTileInt(uint32 ref, uint x, uint y);
+	void drawTileInt(uint32 ref, uint x, uint y, byte transparentColor);
 	void drawShadowFrame(const Common::Rect *rect, bool recessed, bool firstInverse, uint thickness);
 	void drawFrameCircle(Graphics::Surface *target, const Common::Point centre, uint radius, uint color);
 	void drawFilledCircle(Graphics::Surface *target, const Common::Point centre, uint radius, uint color);
