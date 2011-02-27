@@ -41,6 +41,7 @@ private:
 	DeskadvEngine *_vm;
 
 	bool Cmd_ViewPalette(int argc, const char **argv);
+	bool Cmd_DrawStartup(int argc, const char **argv);
 	bool Cmd_DrawTile(int argc, const char **argv);
 	bool Cmd_drawWeapon(int argc, const char **argv);
 	bool Cmd_drawWeaponPower(int argc, const char **argv);

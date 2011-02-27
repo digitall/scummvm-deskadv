@@ -53,6 +53,8 @@ public:
 
 	bool load(const char *filename, bool isYoda);
 
+	byte *getStupData(void);
+
 	uint32 getTileCount(void) { return _tileCount; }
 	byte *getTileData(uint32 ref);
 	uint16 getTileFlags(uint32 ref, bool upperField);
@@ -68,6 +70,8 @@ private:
 	DeskadvEngine *_vm;
 
 	Common::File *_file;
+
+	uint32 _stupOffset;
 
 	uint32 _tileCount;
 	uint32 _tileDataOffset;

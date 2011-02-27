@@ -46,6 +46,7 @@ public:
 	void loadBMP(const char *filename, uint x, uint y);
 
 	void drawScreenOutline(void);
+	void drawStartup(void);
 	void drawWeapon(uint32 ref);
 	void drawWeaponPower(uint8 level);
 	void eraseInventoryItem(uint slot);

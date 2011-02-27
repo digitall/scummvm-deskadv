@@ -65,9 +65,6 @@ bool Resource::load(const char *filename, bool isYoda) {
 	while(!_vm->shouldQuit()) {
 		tag = _file->readUint32BE();
 
-		// TODO: Missing Blocks in all resource file types
-		// unknown tag STUP, size 82944
-
 		// TODO: Missing Blocks in Indy DAW resource file
 		// unknown tag ZAUX, size 15040
 		// unknown tag ZAX2, size 9506
@@ -92,6 +89,12 @@ bool Resource::load(const char *filename, bool isYoda) {
 				warning("Unsupported Version");
 		} else if (tag == MKID_BE('ENDF')) { // End of File
 			break;
+		} else if (tag == MKID_BE('STUP')) {
+			uint32 size = _file->readUint32LE();
+			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
+			assert (size == 32*32*9*9);
+			_stupOffset = _file->pos();
+			_file->seek(size, SEEK_CUR);
 		} else if (tag == MKID_BE('SNDS')) { // Sound List
 			uint32 size = _file->readUint32LE();
 			int16 count = -(_file->readSint16LE());
@@ -428,6 +431,13 @@ ZONE *Resource::getZone(uint num) {
 	}
 
 	return &_zones[num];
+}
+
+byte *Resource::getStupData(void) {
+	byte *data = new byte[32 * 32 * 9 * 9];
+	_file->seek(_stupOffset, SEEK_SET);
+	_file->read(data, 32 * 32 * 9 * 9);
+	return data;
 }
 
 byte *Resource::getTileData(uint32 ref) {

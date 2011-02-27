@@ -399,6 +399,16 @@ void Gfx::drawScreenOutline(void) {
 	drawFilledCircle(_screen, health, 15, GREEN);
 }
 
+void Gfx::drawStartup(void) {
+	byte *stup = _vm->_resource->getStupData();
+	for (uint y = 0; y < 9 * 32; y++) {
+		for (uint x = 0; x < 9 * 32; x++) {
+			*((byte *)_screen->getBasePtr(tileArea.left+x, tileArea.top+y)) = stup[(y*32*9)+x];
+		}
+	}
+	delete[] stup;
+}
+
 void Gfx::drawTile(uint32 ref, uint8 x, uint8 y) {
 	if (x > 8) {
 		warning("drawTile(ref:%d) x:%d out of range 0 to 8 - clamping", ref, x);

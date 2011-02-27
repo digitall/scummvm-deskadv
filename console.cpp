@@ -30,6 +30,7 @@ namespace Deskadv {
 
 DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
 	DCmd_Register("viewPalette", WRAP_METHOD(DeskadvConsole, Cmd_ViewPalette));
+	DCmd_Register("drawStartup", WRAP_METHOD(DeskadvConsole, Cmd_DrawStartup));
 	DCmd_Register("drawTile", WRAP_METHOD(DeskadvConsole, Cmd_DrawTile));
 	DCmd_Register("drawWeapon", WRAP_METHOD(DeskadvConsole, Cmd_drawWeapon));
 	DCmd_Register("drawWeaponPower", WRAP_METHOD(DeskadvConsole, Cmd_drawWeaponPower));
@@ -49,6 +50,11 @@ DeskadvConsole::~DeskadvConsole() {
 
 bool DeskadvConsole::Cmd_ViewPalette(int argc, const char **argv) {
 	_vm->_gfx->viewPalette();
+	return false;
+}
+
+bool DeskadvConsole::Cmd_DrawStartup(int argc, const char **argv) {
+	_vm->_gfx->drawStartup();
 	return false;
 }
 
