@@ -50,6 +50,9 @@ public:
 	void drawWeaponPower(uint8 level);
 	void eraseInventoryItem(uint slot);
 	void drawInventoryItem(uint slot, uint32 iconRef, const char *name);
+	const Common::Rect *getInvScrUp(void);
+	const Common::Rect *getInvScrDown(void);
+	Common::Rect *getInvScrThumb(void) { return InvScrThumb; };
 	void drawDirectionArrows(bool left, bool up, bool right, bool down);
 	void drawHealthMeter(uint level);
 
@@ -63,6 +66,9 @@ private:
 	Common::NEResources _ne;
 	Common::Array<Common::NECursorGroup> _NECursor;
 	const Graphics::Font *_font;
+
+	// Inventory Scroll Bar
+	Common::Rect *InvScrThumb;
 
 	void drawTileInt(uint32 ref, uint x, uint y, byte transparentColor);
 	void drawShadowFrame(const Common::Rect *rect, bool recessed, bool firstInverse, uint thickness);

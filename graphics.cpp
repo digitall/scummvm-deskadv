@@ -39,6 +39,12 @@ namespace Deskadv {
 static const uint screenWidth = 532;
 static const uint screenHeight = 332;
 
+// Inventory Scroll Bar
+static const Common::Rect InvScrollOuter(504, 30, 504+16, 268);
+static const Common::Rect InvScroll(InvScrollOuter.left, InvScrollOuter.top+13, InvScrollOuter.right, InvScrollOuter.bottom-13);
+static const Common::Rect InvScrUp(InvScrollOuter.left+2, InvScrollOuter.top+2, InvScrollOuter.right-2, InvScrollOuter.top+2+9);
+static const Common::Rect InvScrDown(InvScrollOuter.left+2, InvScrollOuter.bottom-2-9, InvScrollOuter.right-2, InvScrollOuter.bottom-2);
+
 Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 	initGraphics(screenWidth, screenHeight, true);
 
@@ -98,11 +104,15 @@ Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 	_font = FontMan.getFontByUsage(Graphics::FontManager::kGUIFont);
 	if (!_font)
 		error("Font Not Found!");
+
+	InvScrThumb = new Common::Rect();
 }
 
 Gfx::~Gfx() {
 	_screen->free();
 	delete _screen;
+
+	delete InvScrThumb;
 }
 
 void Gfx::updateScreen(void) {
@@ -281,13 +291,10 @@ void Gfx::drawScreenOutline(void) {
 	}
 
 	// Inventory Scroll Bar
-	static const Common::Rect InvScrollOuter(504, 30, 504+16, 268);
 	drawShadowFrame(&InvScrollOuter, true, false, 2);
 
-	const Common::Rect InvScroll(504, 30+13, 504+16, 268-13);
 	_screen->fillRect(InvScroll, LIGHT_GREY);
 
-	const Common::Rect InvScrUp(InvScrollOuter.left+2, InvScrollOuter.top+2, InvScrollOuter.right-2, InvScrollOuter.top+2+9);
 	_screen->fillRect(InvScrUp, MEDIUM_GREY);
 	drawShadowFrame(&InvScrUp, false, false, 1);
 	_screen->hLine(InvScrUp.left-2, InvScrUp.bottom+1, InvScrUp.right+1, BLACK);
@@ -295,7 +302,6 @@ void Gfx::drawScreenOutline(void) {
 	for (uint i = 0; i < 3; i++)
 		_screen->hLine(InvScrUp.left+5-i, InvScrUp.top+3+i, InvScrUp.left+5+i, BLACK);
 
-	const Common::Rect InvScrDown(InvScrollOuter.left+2, InvScrollOuter.bottom-2-9, InvScrollOuter.right-2, InvScrollOuter.bottom-2);
 	_screen->fillRect(InvScrDown, MEDIUM_GREY);
 	drawShadowFrame(&InvScrDown, false, false, 1);
 	_screen->hLine(InvScrDown.left-2, InvScrDown.bottom+1, InvScrDown.right+1, BLACK);
@@ -303,15 +309,18 @@ void Gfx::drawScreenOutline(void) {
 	for (uint i = 0; i < 3; i++)
 		_screen->hLine(InvScrDown.left+5-i, InvScrDown.bottom-4-i, InvScrDown.left+5+i, BLACK);
 
-	Common::Rect InvScrThumb(InvScrollOuter.left, InvScrollOuter.top-2+40, InvScrollOuter.right, InvScrollOuter.top+1+40+9);
-	_screen->fillRect(InvScrThumb, MEDIUM_GREY);
-	InvScrThumb.top += 2;
-	InvScrThumb.bottom -= 1;
-	InvScrThumb.left += 2;
-	InvScrThumb.right -= 2;
-	drawShadowFrame(&InvScrThumb, false, false, 1);
-	_screen->hLine(InvScrThumb.left-2, InvScrThumb.bottom+1, InvScrThumb.right+1, BLACK);
-	_screen->vLine(InvScrThumb.right+1, InvScrThumb.top-2, InvScrThumb.bottom, BLACK);
+	InvScrThumb->left = InvScrollOuter.left;
+	InvScrThumb->top = InvScrollOuter.top-2+40;
+	InvScrThumb->right = InvScrollOuter.right;
+	InvScrThumb->bottom = InvScrollOuter.top+1+40+9;
+	_screen->fillRect(*InvScrThumb, MEDIUM_GREY);
+	InvScrThumb->top += 2;
+	InvScrThumb->bottom -= 1;
+	InvScrThumb->left += 2;
+	InvScrThumb->right -= 2;
+	drawShadowFrame(InvScrThumb, false, false, 1);
+	_screen->hLine(InvScrThumb->left-2, InvScrThumb->bottom+1, InvScrThumb->right+1, BLACK);
+	_screen->vLine(InvScrThumb->right+1, InvScrThumb->top-2, InvScrThumb->bottom, BLACK);
 
 	// Direction Arrows Outline
 	// Up Arrow
@@ -459,6 +468,14 @@ void Gfx::drawInventoryItem(uint slot, uint32 iconRef, const char *name) {
 	const Common::String n(name);
 	_font->drawString(_screen, n, InvDesc0.left+5, InvDesc0.top+(slot*34)+12, InvDesc0.width()-10, BLACK, Graphics::kTextAlignLeft, 0, false);
 }
+
+const Common::Rect *Gfx::getInvScrUp(void) {
+	return &InvScrUp;
+};
+
+const Common::Rect *Gfx::getInvScrDown(void) {
+	return &InvScrDown;
+};
 
 void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {
 	uint colorLeft = MEDIUM_GREY;

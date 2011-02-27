@@ -122,13 +122,28 @@ Common::Error DeskadvEngine::run() {
 
 	_gfx->drawScreenOutline();
 
+	bool InvScrGrabbed;
 	while (!shouldQuit()) {
-		debug(1, "Main Loop Tick...");
+		//debug(1, "Main Loop Tick...");
 		_gfx->updateScreen();
 
 		while (_eventMan->pollEvent(event)) {
 			switch (event.type) {
 			case Common::EVENT_LBUTTONDOWN:
+				if (_gfx->getInvScrThumb()->contains(event.mouse)) {
+					debug(1, "Inventory Scroll Thumb Clicked.");
+					InvScrGrabbed = true;
+				}
+				if (_gfx->getInvScrUp()->contains(event.mouse)) {
+					debug(1, "Inventory Scroll Up Arrow Clicked.");
+				}
+				if (_gfx->getInvScrDown()->contains(event.mouse)) {
+					debug(1, "Inventory Scroll Down Arrow Clicked.");
+				}
+				break;
+
+			case Common::EVENT_LBUTTONUP:
+				InvScrGrabbed = false;
 				break;
 
 			case Common::EVENT_RBUTTONDOWN:
