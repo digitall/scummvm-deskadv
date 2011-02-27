@@ -90,6 +90,20 @@ private:
 	DeskadvConsole *_console;
 
 	Common::RandomSource *_rnd;
+
+	// TODO: Add Variables For Game State:
+	// World Size
+	// Combat Difficulty
+	// Sound Effects On/Off
+	// Music On/Off
+
+	// Current World Data
+
+	// Current Zone
+	// Ego Position in Zone
+	// Health Level
+	// Weapon
+	// Inventory Contents
 };
 
 } // End of namespace Deskadv
