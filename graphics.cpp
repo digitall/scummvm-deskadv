@@ -53,51 +53,44 @@ Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 
 	// Code to load palette from dump file
 	// TODO: Need to identify offset in executable and load from there.
-	/*Common::File pal;
-	if (!pal.open("deskadv.exe")) {
+	/*Common::File palFile;
+	if (!palFile.open("deskadv.exe")) {
 		error("Failed to open deskadv.exe");
 	}
-	pal.seek(0x33eb6, SEEK_SET); // Indy Demo
+	palFile.seek(0x33e9e, SEEK_SET); // Indy Demo
 	debug("static const uint8 palette[768] = {");
 	for(uint32 i = 0; i < 241; i++) {
-		debugN("\t0x%02x, ", pal.readByte());
-		debugN("0x%02x, ", pal.readByte());
-		debugN("0x%02x, ", pal.readByte());
-		if (pal.readByte() != 0)
+		debugN("\t0x%02x, ", palFile.readByte());
+		debugN("0x%02x, ", palFile.readByte());
+		debugN("0x%02x, ", palFile.readByte());
+		if (palFile.readByte() != 0)
 			warning("Palette Entry %d Alpha is non-zero", i);
 		debug(" // %02d", i+10);
 	}
 	debug("\t};");
-	pal.close();*/
+	palFile.close();*/
 
 	const uint8 *palData;
 	uint8 pal[256 * 3];
-	bool palBGR;
 	switch (_vm->getGameType()) {
 	case GType_Indy:
 		palData = indyPalette;
-		palBGR = false;
 		break;
 	case GType_Yoda:
 		palData = yodaPalette;
-		palBGR = true;
 		break;
 	default:
 		error("Unknown Game Type for Palette Setting...");
 		break;
 	}
-	if (palBGR) {
-		for (uint i = 0; i < 256; i++) {
-			uint8 blue = palData[(i*3)+0];
-			uint8 green = palData[(i*3)+1];
-			uint8 red = palData[(i*3)+2];
-			pal[(i*3)+0] = red;
-			pal[(i*3)+1] = green;
-			pal[(i*3)+2] = blue;
-		}
-	} else {
-		// Palette is already in RGB, so direct copy.
-		memcpy(pal, palData, 256*3);
+	// Convert Palette from stored BGR to RGB
+	for (uint i = 0; i < 256; i++) {
+		uint8 blue = palData[(i*3)+0];
+		uint8 green = palData[(i*3)+1];
+		uint8 red = palData[(i*3)+2];
+		pal[(i*3)+0] = red;
+		pal[(i*3)+1] = green;
+		pal[(i*3)+2] = blue;
 	}
 	_vm->_system->getPaletteManager()->setPalette(pal, 0, 256);
 
@@ -471,11 +464,11 @@ void Gfx::drawInventoryItem(uint slot, uint32 iconRef, const char *name) {
 
 const Common::Rect *Gfx::getInvScrUp(void) {
 	return &InvScrUp;
-};
+}
 
 const Common::Rect *Gfx::getInvScrDown(void) {
 	return &InvScrDown;
-};
+}
 
 void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {
 	uint colorLeft = MEDIUM_GREY;
