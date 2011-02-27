@@ -117,6 +117,8 @@ void Gfx::drawTileInt(uint32 ref, uint x, uint y, byte transparentColor) {
 	for (uint dy = 0; dy < 32; dy++) {
 		for (uint dx = 0; dx < 32; dx++) {
 			byte pixel = *(tile+(dy*32)+dx);
+			if ((pixel != 0 && pixel < 10) || (pixel != 255 && pixel > 245))
+				warning("Gfx::drawTileInt(ref: %d) uses System Palette Index: %d", ref, pixel);
 			debugC(1, kDebugGraphics, "Gfx::drawTileInt x:%d y:%d pixel:%d", x, y, pixel);
 			if (pixel != transparentColor)
 				*((byte *)_screen->getBasePtr(x+dx, y+dy)) = pixel;
