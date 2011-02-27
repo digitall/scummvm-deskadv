@@ -455,9 +455,9 @@ void Gfx::drawInventoryItem(uint slot, uint32 iconRef, const char *name) {
 	}
 
 	eraseInventoryItem(slot);
-	drawTileInt(iconRef, InvIcon0.left, InvIcon0.top+(slot*32), TRANSPARENT);
+	drawTileInt(iconRef, InvIcon0.left, InvIcon0.top+(slot*34), TRANSPARENT);
 	const Common::String n(name);
-	_font->drawString(_screen, n, InvDesc0.left+5, InvDesc0.top+(slot*32)+12, InvDesc0.width()-10, BLACK, Graphics::kTextAlignLeft, 0, false);
+	_font->drawString(_screen, n, InvDesc0.left+5, InvDesc0.top+(slot*34)+12, InvDesc0.width()-10, BLACK, Graphics::kTextAlignLeft, 0, false);
 }
 
 void Gfx::drawDirectionArrows(bool left, bool up, bool right, bool down) {

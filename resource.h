@@ -32,11 +32,19 @@ namespace Deskadv {
 
 class DeskadvEngine;
 
+typedef struct tname {
+	uint16 id;
+	Common::String name;
+} TNAME;
+
 typedef struct zone {
 	uint16 width;
 	uint16 height;
 	uint16 *tiles[3];
 } ZONE;
+
+// Tile Flag Masks
+#define TILE_LOWER_USE_TRANSPARENCY 0x0001
 
 class Resource {
 public:
@@ -47,6 +55,8 @@ public:
 
 	uint32 getTileCount(void) { return _tileCount; }
 	byte *getTileData(uint32 ref);
+	uint16 getTileFlags(uint32 ref, bool upperField);
+	const char *getTileName(uint32 ref);
 
 	uint16 getZoneCount(void) { return _zoneCount; }
 	ZONE *getZone(uint num);
@@ -61,6 +71,7 @@ private:
 
 	uint32 _tileCount;
 	uint32 _tileDataOffset;
+	Common::Array<TNAME> _tileNames;
 
 	uint16 _zoneCount;
 	Common::Array<ZONE> _zones;

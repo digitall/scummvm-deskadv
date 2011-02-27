@@ -100,16 +100,15 @@ bool DeskadvConsole::Cmd_eraseInventoryItem(int argc, const char **argv) {
 }
 
 bool DeskadvConsole::Cmd_drawInventoryItem(int argc, const char **argv) {
-	if (argc != 4) {
-		DebugPrintf("Usage: drawInventoryItem <slot num> <icon ref> <name string>\n");
+	if (argc != 3) {
+		DebugPrintf("Usage: drawInventoryItem <slot num> <icon ref>\n");
 		return true;
 	}
 
 	uint slot = atoi(argv[1]);
 	uint32 iconRef = atoi(argv[2]);
-	const char *name = argv[3];
 
-	_vm->_gfx->drawInventoryItem(slot, iconRef, name);
+	_vm->_gfx->drawInventoryItem(slot, iconRef, _vm->_resource->getTileName(iconRef));
 	return false;
 }
 

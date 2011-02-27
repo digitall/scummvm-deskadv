@@ -85,14 +85,14 @@ bool Resource::load(const char *filename, bool isYoda) {
 		// Skipping unknown tag CHWP, size 464
 		// Skipping unknown tag CAUX, size 310
 
-		if (tag == MKID_BE('VERS')) {
+		if (tag == MKID_BE('VERS')) { // Version
 			uint32 version = _file->readUint32LE();
 			debugC(1, kDebugResource, "Found VERS Tag - Version: %d", version);
 			if (version != 0x200)
 				warning("Unsupported Version");
-		} else if (tag == MKID_BE('ENDF')) {
+		} else if (tag == MKID_BE('ENDF')) { // End of File
 			break;
-		} else if (tag == MKID_BE('SNDS')) {
+		} else if (tag == MKID_BE('SNDS')) { // Sound List
 			uint32 size = _file->readUint32LE();
 			int16 count = -(_file->readSint16LE());
 			debugC(1, kDebugResource, "Found %s tag, size %d, %d sounds", tag2str(tag), size, count);
@@ -110,7 +110,7 @@ bool Resource::load(const char *filename, bool isYoda) {
 				_soundFiles.push_back(strname);
 			}
 			assert (size == 0);
-		} else if (tag == MKID_BE('ANAM')) {
+		} else if (tag == MKID_BE('ANAM')) { // Action Names
 			uint32 size = _file->readUint32LE();
 			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
 			while (!_vm->shouldQuit()) {
@@ -130,11 +130,11 @@ bool Resource::load(const char *filename, bool isYoda) {
 						len = 16;
 					for (uint16 i = 0; i < len; i++)
 						name += _file->readByte();
-					//name = name.strip('\00')
+					name = name.c_str(); // Drop extra trailing nulls
 					debugC(1, kDebugResource, "entry id %04x (%d) is \"%s\"", id, id, name.c_str());
 				}
 			}
-		} else if (tag == MKID_BE('PNAM')) {
+		} else if (tag == MKID_BE('PNAM')) { // Procedure Names
 			uint32 size = _file->readUint32LE();
 			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
 			uint16 count = _file->readUint16LE();
@@ -142,10 +142,29 @@ bool Resource::load(const char *filename, bool isYoda) {
 				Common::String name;
 				for (uint16 j = 0; j < 16; j++)
 					name += _file->readByte();
-				//name = name.strip('\00')
+				name = name.c_str(); // Drop extra trailing nulls
 				debugC(1, kDebugResource, "entry %04x (%d) is \"%s\"", i, i, name.c_str());
 			}
-		} else if (tag == MKID_BE('TNAM') || tag == MKID_BE('ZNAM')) {
+		} else if (tag == MKID_BE('TNAM')) { // Tile Names
+			uint32 size = _file->readUint32LE();
+			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
+			while (!_vm->shouldQuit()) {
+				TNAME t;
+				t.id = _file->readUint16LE();
+				if (t.id == 0xffff)
+					break;
+				uint16 len;
+				if (isYoda)
+					len = 24;
+				else
+					len = 16;
+				for (uint16 i = 0; i < len; i++)
+					t.name += _file->readByte();
+				t.name = t.name.c_str(); // Drop extra trailing nulls
+				debugC(1, kDebugResource, "entry id %04x (%d) is \"%s\"", t.id, t.id, t.name.c_str());
+				_tileNames.push_back(t);
+			}
+		} else if (tag == MKID_BE('ZNAM')) { // Zone Names
 			uint32 size = _file->readUint32LE();
 			debugC(1, kDebugResource, "Found %s tag, size %d", tag2str(tag), size);
 			while (!_vm->shouldQuit()) {
@@ -160,7 +179,7 @@ bool Resource::load(const char *filename, bool isYoda) {
 					len = 16;
 				for (uint16 i = 0; i < len; i++)
 					name += _file->readByte();
-				//name = name.strip('\00')
+				name = name.c_str(); // Drop extra trailing nulls
 				debugC(1, kDebugResource, "entry id %04x (%d) is \"%s\"", id, id, name.c_str());
 			}
 		} else if (tag == MKID_BE('PUZ2')) {
@@ -193,7 +212,7 @@ bool Resource::load(const char *filename, bool isYoda) {
 					u6 = _file->readUint16LE();
 				debugC(1, kDebugResource, " IPUZ unknowns %04x, %04x", u5, u6);
 			}
-		} else if (tag == MKID_BE('TILE')) {
+		} else if (tag == MKID_BE('TILE')) { // Tile Data
 			uint32 size = _file->readUint32LE();
 			_tileCount = size / 1028;
 			assert (_tileCount*1028 == size);
@@ -205,7 +224,7 @@ bool Resource::load(const char *filename, bool isYoda) {
 				debugC(1, kDebugResource, "Tile #%d (%d, %d)", i, unknown1, unknown2);
 				_file->seek(32 * 32, SEEK_CUR);
 			}
-		} else if (tag == MKID_BE('ZONE')) {
+		} else if (tag == MKID_BE('ZONE')) { // Zone Data
 			if (!isYoda) {
 				uint32 size = _file->readUint32LE();
 				debugC(1, kDebugResource, "size: %d", size);
@@ -421,6 +440,30 @@ byte *Resource::getTileData(uint32 ref) {
 	_file->seek(_tileDataOffset + (ref * ((32 * 32) + 4)) + 4, SEEK_SET);
 	_file->read(data, 32 * 32);
 	return data;
+}
+
+uint16 Resource::getTileFlags(uint32 ref, bool upperField) {
+	if (ref >= _tileCount) {
+		warning("Resource::getTileFlags(%d) ref is out of range", ref);
+		return 0;
+	}
+
+	_file->seek(_tileDataOffset + (ref * ((32 * 32) + 4)) + (upperField ? 2 : 0), SEEK_SET);
+	return _file->readUint16LE();
+}
+
+const char *Resource::getTileName(uint32 ref) {
+	if (ref >= _tileCount) {
+		warning("Resource::getTileName(%d) ref is out of range", ref);
+		return 0;
+	}
+
+	for (uint32 i = 0; i < _tileNames.size(); i++) {
+		if (ref == _tileNames[i].id)
+			return _tileNames[i].name.c_str();
+	}
+	// Tile Name not found.
+	return 0;
 }
 
 const char *Resource::getSoundFilename(uint16 ref) {
