@@ -48,21 +48,53 @@ Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 	// Code to load palette from dump file
 	// TODO: Need to identify offset in executable and load from there.
 	/*Common::File pal;
-	if (!pal.open("yopal.1")) {
-		error("Failed to open yopal.1");
+	if (!pal.open("deskadv.exe")) {
+		error("Failed to open deskadv.exe");
 	}
+	pal.seek(0x33eb6, SEEK_SET); // Indy Demo
 	debug("static const uint8 palette[768] = {");
-	for(uint32 i = 0; i < 256; i++) {
+	for(uint32 i = 0; i < 241; i++) {
 		debugN("\t0x%02x, ", pal.readByte());
 		debugN("0x%02x, ", pal.readByte());
 		debugN("0x%02x, ", pal.readByte());
-		pal.readByte();
-		debug(" // %02d", i);
+		if (pal.readByte() != 0)
+			warning("Palette Entry %d Alpha is non-zero", i);
+		debug(" // %02d", i+10);
 	}
 	debug("\t};");
 	pal.close();*/
 
-	_vm->_system->getPaletteManager()->setPalette(palette, 0, sizeof(palette)/3);
+	const uint8 *palData;
+	uint8 pal[256 * 3];
+	bool palBGR;
+	switch (_vm->getGameType()) {
+	case GType_Indy:
+		palData = indyPalette;
+		palBGR = false;
+		break;
+	case GType_Yoda:
+		palData = yodaPalette;
+		palBGR = true;
+		break;
+	default:
+		error("Unknown Game Type for Palette Setting...");
+		break;
+	}
+	if (palBGR) {
+		for (uint i = 0; i < 256; i++) {
+			uint8 blue = palData[(i*3)+0];
+			uint8 green = palData[(i*3)+1];
+			uint8 red = palData[(i*3)+2];
+			pal[(i*3)+0] = red;
+			pal[(i*3)+1] = green;
+			pal[(i*3)+2] = blue;
+		}
+	} else {
+		// Palette is already in RGB, so direct copy.
+		memcpy(pal, palData, 256*3);
+	}
+	_vm->_system->getPaletteManager()->setPalette(pal, 0, 256);
+
 	_font = FontMan.getFontByUsage(Graphics::FontManager::kGUIFont);
 	if (!_font)
 		error("Font Not Found!");
