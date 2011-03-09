@@ -64,8 +64,6 @@ DeskadvEngine::DeskadvEngine(OSystem *syst, const DeskadvGameDescription *gameDe
 	_resource = 0;
 
 	// TODO: Add Sound Mixer
-	// TODO: Add WAV Player for SFX
-	// TODO: Add Standard SMF Midi Player for Music
 }
 
 DeskadvEngine::~DeskadvEngine() {
@@ -107,10 +105,20 @@ Common::Error DeskadvEngine::run() {
 		error("Loading from Resource File failed!");
 
 	// Load Mouse Cursors
-	if (getGameType() == GType_Indy)
+	switch (getGameType()) {
+	case GType_Indy:
 		_gfx->loadNECursors("deskadv.exe");
-	if (getGameType() == GType_Yoda)
-		warning("TODO: PE Loader needed for Yoda Stories Executable");
+		break;
+	case GType_Yoda:
+		if (getFeatures() & ADGF_DEMO)
+			_gfx->loadPECursors("yodademo.exe");
+		else
+			_gfx->loadPECursors("yodesk.exe");
+		break;
+	default:
+		error("Unknown Game Type for Executable File...");
+		break;
+	}
 	_gfx->setDefaultCursor();
 	CursorMan.showMouse(true);
 

@@ -28,7 +28,8 @@
 
 #include "graphics/surface.h"
 #include "graphics/font.h"
-#include "common/ne_exe.h"
+#include "common/winexe_ne.h"
+#include "common/winexe_pe.h"
 #include "common/rect.h"
 
 namespace Deskadv {
@@ -41,6 +42,7 @@ public:
 	void updateScreen(void);
 	void drawTile(uint32 ref, uint8 x, uint8 y);
 	void loadNECursors(const char *filename);
+	void loadPECursors(const char *filename);
 	void setDefaultCursor(void);
 	void changeCursor(uint id);
 	void loadBMP(const char *filename, uint x, uint y);
@@ -65,7 +67,8 @@ private:
 
 	Graphics::Surface *_screen;
 	Common::NEResources _ne;
-	Common::Array<Common::NECursorGroup> _NECursor;
+	Common::PEResources _pe;
+	Common::Array<Common::WinResourceID> _cursor;
 	const Graphics::Font *_font;
 
 	// Inventory Scroll Bar

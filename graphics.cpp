@@ -31,6 +31,7 @@
 #include "common/file.h"
 
 #include "graphics/cursorman.h"
+#include "graphics/wincursor.h"
 #include "graphics/fontman.h"
 #include "graphics/imagedec.h"
 
@@ -132,10 +133,19 @@ void Gfx::drawTileInt(uint32 ref, uint x, uint y, byte transparentColor) {
 
 void Gfx::loadNECursors(const char *filename) {
 	_ne.loadFromEXE(filename);
-	_NECursor = _ne.getCursors();
-	debugC(1, kDebugGraphics, "Loading NE Cursors: Found %d", _NECursor.size());
-	for (uint i = 0; i < _NECursor.size(); i++)
-		debugC(1, kDebugGraphics, "\tFound %d Cursors of Resource id: %s", _NECursor[i].cursors.size(), _NECursor[i].id.toString().c_str());
+	_cursor = _ne.getIDList(Common::kNECursor);
+	debugC(1, kDebugGraphics, "Loading NE Cursors: Found %d", _cursor.size());
+	for (uint i = 0; i < _cursor.size(); i++)
+		debugC(1, kDebugGraphics, "\tCursor %d Resource id: %s", i, _cursor[i].toString().c_str());
+}
+
+void Gfx::loadPECursors(const char *filename) {
+	Common::WinResourceID c(Common::kPECursor);
+	_pe.loadFromEXE(filename);
+	_cursor = _pe.getNameList(c);
+	debugC(1, kDebugGraphics, "Loading PE Cursors: Found %d", _cursor.size());
+	for (uint i = 0; i < _cursor.size(); i++)
+		debugC(1, kDebugGraphics, "\tCursor %d Resource id: %s", i, _cursor[i].toString().c_str());
 }
 
 void Gfx::setDefaultCursor() {
@@ -172,12 +182,15 @@ void Gfx::setDefaultCursor() {
 }
 
 void Gfx::changeCursor(uint id) {
-	if (id >= _NECursor.size()) {
+	if (id >= _cursor.size()) {
 		warning("Attempted to set invalid cursor id:%d", id);
 		return;
 	}
 
-	const Common::NECursor *cur = _NECursor[id].cursors[0];
+	// TODO: Add Code to select PE cursors if present..
+	Graphics::WinCursor cur;
+	Common::SeekableReadStream* curData = _ne.getResource(Common::kNECursor, _cursor[id]);
+	cur.readFromStream(*curData);
 	//  0 -       Left Arrow White Filled (0x006a)
 	//  1 -      Right Arrow White Filled (0x006b)
 	//  2 -         Up Arrow White Filled (0x006c)
@@ -200,8 +213,9 @@ void Gfx::changeCursor(uint id) {
 	// 18 -    Win3.1 Horizontal   Resize (0x790a)
 	// 19 -    Win3.1 Move         Window (0x790b)
 	// 20 -    Win3.1   Pointer with Move (0x790c)
-	CursorMan.replaceCursor(cur->getSurface(), cur->getWidth(), cur->getHeight(), cur->getHotspotX(), cur->getHotspotY(), 0);
-	CursorMan.replaceCursorPalette(cur->getPalette(), 0, 256);
+	CursorMan.replaceCursor(cur.getSurface(), cur.getWidth(), cur.getHeight(), cur.getHotspotX(), cur.getHotspotY(), cur.getKeyColor());
+	CursorMan.replaceCursorPalette(cur.getPalette(), 0, 256);
+	delete curData;
 }
 
 void Gfx::loadBMP(const char *filename, uint x, uint y) {
