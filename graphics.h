@@ -28,6 +28,7 @@
 
 #include "graphics/surface.h"
 #include "graphics/font.h"
+#include "graphics/wincursor.h"
 #include "common/winexe_ne.h"
 #include "common/winexe_pe.h"
 #include "common/rect.h"
@@ -41,8 +42,7 @@ public:
 
 	void updateScreen(void);
 	void drawTile(uint32 ref, uint8 x, uint8 y);
-	void loadNECursors(const char *filename);
-	void loadPECursors(const char *filename);
+	void loadCursors(const char *filename);
 	void setDefaultCursor(void);
 	void changeCursor(uint id);
 	void loadBMP(const char *filename, uint x, uint y);

@@ -31,7 +31,6 @@
 #include "common/file.h"
 
 #include "graphics/cursorman.h"
-#include "graphics/wincursor.h"
 #include "graphics/fontman.h"
 #include "graphics/imagedec.h"
 
@@ -131,19 +130,24 @@ void Gfx::drawTileInt(uint32 ref, uint x, uint y, byte transparentColor) {
 	delete[] tile;
 }
 
-void Gfx::loadNECursors(const char *filename) {
-	_ne.loadFromEXE(filename);
-	_cursor = _ne.getIDList(Common::kNECursor);
-	debugC(1, kDebugGraphics, "Loading NE Cursors: Found %d", _cursor.size());
-	for (uint i = 0; i < _cursor.size(); i++)
-		debugC(1, kDebugGraphics, "\tCursor %d Resource id: %s", i, _cursor[i].toString().c_str());
-}
-
-void Gfx::loadPECursors(const char *filename) {
-	Common::WinResourceID c(Common::kPECursor);
-	_pe.loadFromEXE(filename);
-	_cursor = _pe.getNameList(c);
-	debugC(1, kDebugGraphics, "Loading PE Cursors: Found %d", _cursor.size());
+void Gfx::loadCursors(const char *filename) {
+	debugCN(1, kDebugGraphics, "Loading ");
+	switch (_vm->getGameType()) {
+	case GType_Indy:
+		debugCN(1, kDebugGraphics, "NE");
+		_ne.loadFromEXE(filename);
+		_cursor = _ne.getIDList(Common::kNEGroupCursor);
+		break;
+	case GType_Yoda:
+		debugCN(1, kDebugGraphics, "PE");
+		_pe.loadFromEXE(filename);
+		_cursor = _pe.getNameList(Common::WinResourceID(Common::kPEGroupCursor));
+		break;
+	default:
+		error("Unknown Game Type for Executable File...");
+		break;
+	}
+	debugC(1, kDebugGraphics, "Cursors: Found %d", _cursor.size());
 	for (uint i = 0; i < _cursor.size(); i++)
 		debugC(1, kDebugGraphics, "\tCursor %d Resource id: %s", i, _cursor[i].toString().c_str());
 }
@@ -187,10 +191,20 @@ void Gfx::changeCursor(uint id) {
 		return;
 	}
 
-	// TODO: Add Code to select PE cursors if present..
-	Graphics::WinCursor cur;
-	Common::SeekableReadStream* curData = _ne.getResource(Common::kNECursor, _cursor[id]);
-	cur.readFromStream(*curData);
+	Graphics::WinCursorGroup *curGroup = 0;
+	switch (_vm->getGameType()) {
+	case GType_Indy:
+		curGroup = Graphics::WinCursorGroup::createCursorGroup(_ne, _cursor[id]);
+		break;
+	case GType_Yoda:
+		curGroup = Graphics::WinCursorGroup::createCursorGroup(_pe, _cursor[id]);
+		break;
+	default:
+		error("Unknown Game Type for Executable File...");
+		break;
+	}
+
+	const Graphics::WinCursor *cur = curGroup->cursors[0].cursor;
 	//  0 -       Left Arrow White Filled (0x006a)
 	//  1 -      Right Arrow White Filled (0x006b)
 	//  2 -         Up Arrow White Filled (0x006c)
@@ -213,9 +227,11 @@ void Gfx::changeCursor(uint id) {
 	// 18 -    Win3.1 Horizontal   Resize (0x790a)
 	// 19 -    Win3.1 Move         Window (0x790b)
 	// 20 -    Win3.1   Pointer with Move (0x790c)
-	CursorMan.replaceCursor(cur.getSurface(), cur.getWidth(), cur.getHeight(), cur.getHotspotX(), cur.getHotspotY(), cur.getKeyColor());
-	CursorMan.replaceCursorPalette(cur.getPalette(), 0, 256);
-	delete curData;
+	// Indy and Yoda have different order, but same resource Id values
+
+	CursorMan.replaceCursor(cur->getSurface(), cur->getWidth(), cur->getHeight(), cur->getHotspotX(), cur->getHotspotY(), cur->getKeyColor());
+	CursorMan.replaceCursorPalette(cur->getPalette(), 0, 256);
+	delete curGroup;
 }
 
 void Gfx::loadBMP(const char *filename, uint x, uint y) {

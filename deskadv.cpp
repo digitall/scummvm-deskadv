@@ -107,13 +107,13 @@ Common::Error DeskadvEngine::run() {
 	// Load Mouse Cursors
 	switch (getGameType()) {
 	case GType_Indy:
-		_gfx->loadNECursors("deskadv.exe");
+		_gfx->loadCursors("deskadv.exe");
 		break;
 	case GType_Yoda:
 		if (getFeatures() & ADGF_DEMO)
-			_gfx->loadPECursors("yodademo.exe");
+			_gfx->loadCursors("yodademo.exe");
 		else
-			_gfx->loadPECursors("yodesk.exe");
+			_gfx->loadCursors("yodesk.exe");
 		break;
 	default:
 		error("Unknown Game Type for Executable File...");
