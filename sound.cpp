@@ -32,8 +32,6 @@
 #include "audio/audiostream.h"
 #include "audio/decoders/wave.h"
 
-#include "audio/mididrv.h"
-
 namespace Deskadv {
 
 Sound::Sound(DeskadvEngine *vm) : _vm(vm) {

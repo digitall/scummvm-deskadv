@@ -28,6 +28,8 @@
 
 #include "common/file.h"
 #include "audio/mixer.h"
+
+#include "audio/mididrv.h"
 #include "audio/midiparser.h"
 
 namespace Deskadv {
