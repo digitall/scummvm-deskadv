@@ -25,7 +25,6 @@
 
 #include "deskadv/deskadv.h"
 #include "deskadv/graphics.h"
-
 #include "deskadv/palette.h"
 
 #include "common/file.h"
@@ -33,6 +32,7 @@
 #include "graphics/cursorman.h"
 #include "graphics/fontman.h"
 #include "graphics/imagedec.h"
+#include "graphics/palette.h"
 
 namespace Deskadv {
 
