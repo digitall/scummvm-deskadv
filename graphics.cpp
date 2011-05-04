@@ -49,7 +49,7 @@ Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
 	initGraphics(screenWidth, screenHeight, true);
 
 	_screen = new Graphics::Surface();
-	_screen->create(screenWidth, screenHeight, 1);
+	_screen->create(screenWidth, screenHeight, Graphics::PixelFormat::createFormatCLUT8());
 
 	// Code to load palette from dump file
 	// TODO: Need to identify offset in executable and load from there.
