@@ -25,8 +25,9 @@
 #include "common/scummsys.h"
  
 #include "common/config-manager.h"
-#include "common/EventRecorder.h"
+#include "common/events.h"
 #include "common/file.h"
+#include "common/random.h"
 #include "common/fs.h"
 #include "common/keyboard.h"
 
@@ -55,8 +56,7 @@ DeskadvEngine::DeskadvEngine(OSystem *syst, const DeskadvGameDescription *gameDe
 	SearchMan.addSubDirectoryMatching(gameDataDir, "bitmaps");
 	SearchMan.addSubDirectoryMatching(gameDataDir, "sfx");
 
-	_rnd = new Common::RandomSource();
-	g_eventRec.registerRandomSource(*_rnd, "deskadv");
+	_rnd = new Common::RandomSource("deskadv");
 
 	_console = 0;
 	_gfx = 0;
