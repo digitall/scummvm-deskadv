@@ -133,38 +133,13 @@ static const DeskadvGameDescription gameDescriptions[] = {
 	{ AD_TABLE_END_MARKER, 0 }
 };
 
-static const ADParams detectionParams = {
-	// Pointer to ADGameDescription or its superset structure
-	(const byte *)Deskadv::gameDescriptions,
-	// Size of that superset structure
-	sizeof(Deskadv::DeskadvGameDescription),
-	// Number of bytes to compute MD5 sum for
-	5000,
-	// List of all engine targets
-	deskadvGames,
-	// Structure for autoupgrading obsolete targets
-	0,
-	// Name of single gameid (optional)
-	0,
-	// List of files for file-based fallback detection (optional)
-	0,
-	// Flags
-	0,
-	// GUI options
-	Common::GUIO_NONE,
-	// Maximum directory depth
-	1,
-	// List of directory globs
-	0
-};
-
 } // End of namespace Deskadv
 
 using namespace Deskadv;
 
 class DeskadvMetaEngine : public AdvancedMetaEngine {
 public:
-	DeskadvMetaEngine() : AdvancedMetaEngine(detectionParams) {}
+	DeskadvMetaEngine() : AdvancedMetaEngine(Deskadv::gameDescriptions, sizeof(Deskadv::DeskadvGameDescription), deskadvGames) {}
 
 	virtual const char *getName() const {
 		return "Desktop Adventures Engine";
