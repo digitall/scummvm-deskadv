@@ -10,7 +10,7 @@ MODULE_OBJS = \
 	sound.o
 
 # This module can be built as a plugin
-ifdef BUILD_PLUGINS
+ifeq ($(ENABLE_DESKADV), DYNAMIC_PLUGIN)
 PLUGIN := 1
 endif
 
