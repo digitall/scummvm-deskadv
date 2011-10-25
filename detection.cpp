@@ -62,8 +62,6 @@ static const PlainGameDescriptor deskadvGames[] = {
 
 namespace Deskadv {
 
-using Common::GUIO_NONE;
-
 static const DeskadvGameDescription gameDescriptions[] = {
 
 	// Indiana Jones Desktop Adventures - English
@@ -77,7 +75,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			Common::EN_ANY,
 			Common::kPlatformWindows,
 			ADGF_NO_FLAGS,
-			Common::GUIO_NONE
+			GUIO1(GUIO_NONE)
 		},
 		GType_Indy
 	},
@@ -93,7 +91,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			Common::EN_ANY,
 			Common::kPlatformWindows,
 			ADGF_DEMO,
-			Common::GUIO_NONE
+			GUIO1(GUIO_NONE)
 		},
 		GType_Indy
 	},
@@ -109,7 +107,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			Common::EN_ANY,
 			Common::kPlatformWindows,
 			ADGF_NO_FLAGS,
-			Common::GUIO_NONE
+			GUIO1(GUIO_NONE)
 		},
 		GType_Yoda
 	},
@@ -125,7 +123,7 @@ static const DeskadvGameDescription gameDescriptions[] = {
 			Common::EN_ANY,
 			Common::kPlatformWindows,
 			ADGF_DEMO,
-			Common::GUIO_NONE
+			GUIO1(GUIO_NONE)
 		},
 		GType_Yoda
 	},
