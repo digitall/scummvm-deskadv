@@ -31,7 +31,7 @@
 
 #include "graphics/cursorman.h"
 #include "graphics/fontman.h"
-#include "graphics/imagedec.h"
+#include "graphics/decoders/bmp.h"
 #include "graphics/palette.h"
 
 namespace Deskadv {
@@ -236,19 +236,16 @@ void Gfx::changeCursor(uint id) {
 
 void Gfx::loadBMP(const char *filename, uint x, uint y) {
 	Common::File imageFile;
+	Graphics::BitmapDecoder bmp;
 
 	if (!imageFile.open(filename))
 		error("LoadBMP : Failed to open \"%s\"", filename);
 
-	Graphics::Surface *image = Graphics::ImageDecoder::loadFile(imageFile, _vm->_system->getOverlayFormat());
-
-	if (image) {
+	if (bmp.loadStream(imageFile)) {
+		const Graphics::Surface *image = bmp.getSurface();
 		// TODO: Format conversion needed?
 		for (uint i = 0; i < image->h; i++)
 			memcpy(_screen->getBasePtr(x, y+i), image->getBasePtr(0, i), image->w);
-
-		image->free();
-		delete image;
 	} else
 		warning("loadBMP failure!");
 	imageFile.close();
