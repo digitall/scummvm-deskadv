@@ -204,7 +204,7 @@ void Gfx::changeCursor(uint id) {
 		break;
 	}
 
-	const Graphics::WinCursor *cur = curGroup->cursors[0].cursor;
+	const Graphics::Cursor *cur = curGroup->cursors[0].cursor;
 	//  0 -       Left Arrow White Filled (0x006a)
 	//  1 -      Right Arrow White Filled (0x006b)
 	//  2 -         Up Arrow White Filled (0x006c)
