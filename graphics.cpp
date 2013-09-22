@@ -110,7 +110,7 @@ Gfx::~Gfx() {
 
 void Gfx::updateScreen(void) {
 	debugC(1, kDebugGraphics, "Gfx::updateScreen()");
-	_vm->_system->copyRectToScreen((byte *)_screen->pixels, _screen->pitch, 0, 0, screenWidth, screenHeight);
+	_vm->_system->copyRectToScreen((byte *)_screen->getPixels(), _screen->pitch, 0, 0, screenWidth, screenHeight);
 	_vm->_system->updateScreen();
 }
 
