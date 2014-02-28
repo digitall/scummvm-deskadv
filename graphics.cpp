@@ -31,7 +31,7 @@
 
 #include "graphics/cursorman.h"
 #include "graphics/fontman.h"
-#include "graphics/decoders/bmp.h"
+#include "image/bmp.h"
 #include "graphics/palette.h"
 
 namespace Deskadv {
@@ -236,7 +236,7 @@ void Gfx::changeCursor(uint id) {
 
 void Gfx::loadBMP(const char *filename, uint x, uint y) {
 	Common::File imageFile;
-	Graphics::BitmapDecoder bmp;
+	Image::BitmapDecoder bmp;
 
 	if (!imageFile.open(filename))
 		error("LoadBMP : Failed to open \"%s\"", filename);
