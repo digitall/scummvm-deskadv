@@ -40,20 +40,20 @@ public:
 private:
 	DeskadvEngine *_vm;
 
-	bool Cmd_ViewPalette(int argc, const char **argv);
-	bool Cmd_DrawStartup(int argc, const char **argv);
-	bool Cmd_DrawTile(int argc, const char **argv);
-	bool Cmd_drawWeapon(int argc, const char **argv);
-	bool Cmd_drawWeaponPower(int argc, const char **argv);
-	bool Cmd_eraseInventoryItem(int argc, const char **argv);
-	bool Cmd_drawInventoryItem(int argc, const char **argv);
-	bool Cmd_drawDirectionArrows(int argc, const char **argv);
-	bool Cmd_drawHealthMeter(int argc, const char **argv);
-	bool Cmd_ChangeCursor(int argc, const char **argv);
-	bool Cmd_ListSounds(int argc, const char **argv);
-	bool Cmd_PlaySound(int argc, const char **argv);
-	bool Cmd_StopSound(int argc, const char **argv);
-	bool Cmd_DrawZone(int argc, const char **argv);
+	bool cmdViewPalette(int argc, const char **argv);
+	bool cmdDrawStartup(int argc, const char **argv);
+	bool cmdDrawTile(int argc, const char **argv);
+	bool cmdDrawWeapon(int argc, const char **argv);
+	bool cmdDrawWeaponPower(int argc, const char **argv);
+	bool cmdEraseInventoryItem(int argc, const char **argv);
+	bool cmdDrawInventoryItem(int argc, const char **argv);
+	bool cmdDrawDirectionArrows(int argc, const char **argv);
+	bool cmdDrawHealthMeter(int argc, const char **argv);
+	bool cmdChangeCursor(int argc, const char **argv);
+	bool cmdListSounds(int argc, const char **argv);
+	bool cmdPlaySound(int argc, const char **argv);
+	bool cmdStopSound(int argc, const char **argv);
+	bool cmdDrawZone(int argc, const char **argv);
 };
 
 } // End of namespace Deskadv

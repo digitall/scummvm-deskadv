@@ -29,36 +29,36 @@
 namespace Deskadv {
 
 DeskadvConsole::DeskadvConsole(DeskadvEngine *vm) : GUI::Debugger(), _vm(vm) {
-	registerCmd("viewPalette", WRAP_METHOD(DeskadvConsole, Cmd_ViewPalette));
-	registerCmd("drawStartup", WRAP_METHOD(DeskadvConsole, Cmd_DrawStartup));
-	registerCmd("drawTile", WRAP_METHOD(DeskadvConsole, Cmd_DrawTile));
-	registerCmd("drawWeapon", WRAP_METHOD(DeskadvConsole, Cmd_drawWeapon));
-	registerCmd("drawWeaponPower", WRAP_METHOD(DeskadvConsole, Cmd_drawWeaponPower));
-	registerCmd("eraseInventoryItem", WRAP_METHOD(DeskadvConsole, Cmd_eraseInventoryItem));
-	registerCmd("drawInventoryItem", WRAP_METHOD(DeskadvConsole, Cmd_drawInventoryItem));
-	registerCmd("drawDirectionArrows", WRAP_METHOD(DeskadvConsole, Cmd_drawDirectionArrows));
-	registerCmd("drawHealthMeter", WRAP_METHOD(DeskadvConsole, Cmd_drawHealthMeter));
-	registerCmd("changeCursor", WRAP_METHOD(DeskadvConsole, Cmd_ChangeCursor));
-	registerCmd("listSounds", WRAP_METHOD(DeskadvConsole, Cmd_ListSounds));
-	registerCmd("playSound", WRAP_METHOD(DeskadvConsole, Cmd_PlaySound));
-	registerCmd("stopSound", WRAP_METHOD(DeskadvConsole, Cmd_StopSound));
-	registerCmd("drawZone", WRAP_METHOD(DeskadvConsole, Cmd_DrawZone));
+	registerCmd("viewPalette", WRAP_METHOD(DeskadvConsole, cmdViewPalette));
+	registerCmd("drawStartup", WRAP_METHOD(DeskadvConsole, cmdDrawStartup));
+	registerCmd("drawTile", WRAP_METHOD(DeskadvConsole, cmdDrawTile));
+	registerCmd("drawWeapon", WRAP_METHOD(DeskadvConsole, cmdDrawWeapon));
+	registerCmd("drawWeaponPower", WRAP_METHOD(DeskadvConsole, cmdDrawWeaponPower));
+	registerCmd("eraseInventoryItem", WRAP_METHOD(DeskadvConsole, cmdEraseInventoryItem));
+	registerCmd("drawInventoryItem", WRAP_METHOD(DeskadvConsole, cmdDrawInventoryItem));
+	registerCmd("drawDirectionArrows", WRAP_METHOD(DeskadvConsole, cmdDrawDirectionArrows));
+	registerCmd("drawHealthMeter", WRAP_METHOD(DeskadvConsole, cmdDrawHealthMeter));
+	registerCmd("changeCursor", WRAP_METHOD(DeskadvConsole, cmdChangeCursor));
+	registerCmd("listSounds", WRAP_METHOD(DeskadvConsole, cmdListSounds));
+	registerCmd("playSound", WRAP_METHOD(DeskadvConsole, cmdPlaySound));
+	registerCmd("stopSound", WRAP_METHOD(DeskadvConsole, cmdStopSound));
+	registerCmd("drawZone", WRAP_METHOD(DeskadvConsole, cmdDrawZone));
 }
 
 DeskadvConsole::~DeskadvConsole() {
 }
 
-bool DeskadvConsole::Cmd_ViewPalette(int argc, const char **argv) {
+bool DeskadvConsole::cmdViewPalette(int argc, const char **argv) {
 	_vm->_gfx->viewPalette();
 	return false;
 }
 
-bool DeskadvConsole::Cmd_DrawStartup(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawStartup(int argc, const char **argv) {
 	_vm->_gfx->drawStartup();
 	return false;
 }
 
-bool DeskadvConsole::Cmd_DrawTile(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawTile(int argc, const char **argv) {
 	if (argc != 4) {
 		debugPrintf("Usage: drawTile <ref> <x> <y>\n");
 		return true;
@@ -71,7 +71,7 @@ bool DeskadvConsole::Cmd_DrawTile(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_drawWeapon(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawWeapon(int argc, const char **argv) {
 	if (argc != 2) {
 		debugPrintf("Usage: drawWeapon <ref>\n");
 		return true;
@@ -82,7 +82,7 @@ bool DeskadvConsole::Cmd_drawWeapon(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_drawWeaponPower(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawWeaponPower(int argc, const char **argv) {
 	if (argc != 2) {
 		debugPrintf("Usage: drawWeaponPower <level>\n");
 		return true;
@@ -93,7 +93,7 @@ bool DeskadvConsole::Cmd_drawWeaponPower(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_eraseInventoryItem(int argc, const char **argv) {
+bool DeskadvConsole::cmdEraseInventoryItem(int argc, const char **argv) {
 	if (argc != 2) {
 		debugPrintf("Usage: eraseInventoryItem <slot num>\n");
 		return true;
@@ -105,7 +105,7 @@ bool DeskadvConsole::Cmd_eraseInventoryItem(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_drawInventoryItem(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawInventoryItem(int argc, const char **argv) {
 	if (argc != 3) {
 		debugPrintf("Usage: drawInventoryItem <slot num> <icon ref>\n");
 		return true;
@@ -118,7 +118,7 @@ bool DeskadvConsole::Cmd_drawInventoryItem(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_drawDirectionArrows(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawDirectionArrows(int argc, const char **argv) {
 	if (argc != 5) {
 		debugPrintf("Usage: drawDirectionArrows <left> <up> <right> <down>\n");
 		return true;
@@ -133,7 +133,7 @@ bool DeskadvConsole::Cmd_drawDirectionArrows(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_drawHealthMeter(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawHealthMeter(int argc, const char **argv) {
 	if (argc != 2) {
 		debugPrintf("Usage: drawHealthMeter <level>\n");
 		return true;
@@ -145,7 +145,7 @@ bool DeskadvConsole::Cmd_drawHealthMeter(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_ChangeCursor(int argc, const char **argv) {
+bool DeskadvConsole::cmdChangeCursor(int argc, const char **argv) {
 	if (argc != 2) {
 		debugPrintf("changeCursor <id>\n");
 		return true;
@@ -158,7 +158,7 @@ bool DeskadvConsole::Cmd_ChangeCursor(int argc, const char **argv) {
 	return true;
 }
 
-bool DeskadvConsole::Cmd_ListSounds(int argc, const char **argv) {
+bool DeskadvConsole::cmdListSounds(int argc, const char **argv) {
 	if (argc != 1) {
 		debugPrintf("listSounds\n");
 		return true;
@@ -169,7 +169,7 @@ bool DeskadvConsole::Cmd_ListSounds(int argc, const char **argv) {
 	return true;
 }
 
-bool DeskadvConsole::Cmd_PlaySound(int argc, const char **argv) {
+bool DeskadvConsole::cmdPlaySound(int argc, const char **argv) {
 	if (argc != 2) {
 		debugPrintf("playSound <ref>\n");
 		return true;
@@ -183,7 +183,7 @@ bool DeskadvConsole::Cmd_PlaySound(int argc, const char **argv) {
 	return false;
 }
 
-bool DeskadvConsole::Cmd_StopSound(int argc, const char **argv) {
+bool DeskadvConsole::cmdStopSound(int argc, const char **argv) {
 	if (argc != 1) {
 		debugPrintf("stopSound\n");
 		return true;
@@ -196,7 +196,7 @@ bool DeskadvConsole::Cmd_StopSound(int argc, const char **argv) {
 	return true;
 }
 
-bool DeskadvConsole::Cmd_DrawZone(int argc, const char **argv) {
+bool DeskadvConsole::cmdDrawZone(int argc, const char **argv) {
 	if (argc != 2) {
 		debugPrintf("drawZone <num = 0 to %d>\n", _vm->_resource->getZoneCount());
 		return true;
