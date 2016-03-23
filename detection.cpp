@@ -41,7 +41,7 @@ int DeskadvEngine::getGameType() const {
 }
 
 const char *DeskadvEngine::getGameId() const {
-	return _gameDescription->desc.gameid;
+	return _gameDescription->desc.gameId;
 }
 
 uint32 DeskadvEngine::getFeatures() const {
