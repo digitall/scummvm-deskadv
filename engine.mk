@@ -1,0 +1,4 @@
+ifdef ENABLE_DESKADV
+DEFINES += -DENABLE_DESKADV=$(ENABLE_DESKADV)
+MODULES += engines/deskadv
+endif
