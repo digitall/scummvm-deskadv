@@ -96,6 +96,22 @@ static const DeskadvGameDescription gameDescriptions[] = {
 		GType_Indy
 	},
 
+	// Indiana Jones Desktop Adventures (Demo) - English - Internet Archive
+	{
+		{
+			"indydesk",
+			"Demo",
+			{{"desktop.daw", 0, "1580ec98fad18c021b8450506c071080", -1},
+			 {"deskadv.exe", 0, "8fc2d80b280042429e80f0525960f1a4", -1},
+			 AD_LISTEND},
+			Common::EN_ANY,
+			Common::kPlatformWindows,
+			ADGF_DEMO,
+			GUIO1(GUIO_NONE)
+		},
+		GType_Indy
+	},
+
 	// Yoda Stories - English
 	{
 		{
