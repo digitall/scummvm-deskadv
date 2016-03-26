@@ -214,7 +214,7 @@ bool DeskadvConsole::cmdDrawZone(int argc, const char **argv) {
 		ZONE *z = _vm->_resource->getZone(num);
 		for (uint y = 0; y < 9; y++) {
 			for (uint x = 0; x < 9; x++) {
-				for (uint layer = 0; layer < 2; layer++) {
+				for (uint layer = 0; layer < 3; layer++) {
 					uint16 tileRef = z->tiles[layer][(y*z->width)+x];
 					if (tileRef != 0xFFFF)
 						_vm->_gfx->drawTile(tileRef, x, y);
