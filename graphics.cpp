@@ -46,7 +46,7 @@ static const Common::Rect InvScrUp(InvScrollOuter.left+2, InvScrollOuter.top+2, 
 static const Common::Rect InvScrDown(InvScrollOuter.left+2, InvScrollOuter.bottom-2-9, InvScrollOuter.right-2, InvScrollOuter.bottom-2);
 
 Gfx::Gfx(DeskadvEngine *vm) : _vm(vm) {
-	initGraphics(screenWidth, screenHeight, true);
+	initGraphics(screenWidth, screenHeight);
 
 	_screen = new Graphics::Surface();
 	_screen->create(screenWidth, screenHeight, Graphics::PixelFormat::createFormatCLUT8());
